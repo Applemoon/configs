@@ -54,7 +54,7 @@ function cd
 }
 
 shopt -s cdspell
-source .git-prompt.sh
+source ~/.git-prompt.sh
 
 PS1='\e]0;\u@\H\a' # title
 
@@ -66,20 +66,20 @@ PS1="$PS1"'\e[38;5;136m' # dark yellow
 PS1="$PS1"']'
 
 PS1="$PS1"'\[\033[34m\]' # blue
-PS1="$PS1"'$(__git_ps1 "' 
-PS1="$PS1"'['
+PS1="$PS1"'$(__git_ps1 " ['
 PS1="$PS1"'\[\033[94m\]' # cyan
-PS1="$PS1"'%s' # git branch 
+PS1="$PS1"'%s' # git branch
 PS1="$PS1"'\[\033[34m\]' # blue
 PS1="$PS1"']")'
 
 PS1="$PS1"'\[\033[0m\] ' # white
 PS1="$PS1"'\A'
 
-PS1="$PS1"'\n'
 PS1="$PS1"'\[\033[91m\]' # red
-PS1="$PS1"'➤' # arrow 
+PS1="$PS1"' ➤' # arrow 
 PS1="$PS1"'\[\033[0m\] ' # white
+
+
 
 alias df='df -h'
 alias whence='type -a'                        # where, of a sort
@@ -107,4 +107,4 @@ function cdl { cd $1; pwd; ls; }
 function chrome { '/c/Program Files (x86)/Google/Chrome/Application/chrome.exe' $(cygpath -w $1); }
 function subl { '/c/Program Files/Sublime Text 3/subl.exe' $(cygpath -w $1); }
 
-cd /c/marlet
+cd
