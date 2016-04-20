@@ -50,36 +50,37 @@ function cd
     fi
   done
 
+  settitle
   return 0
 }
 
 shopt -s cdspell
 source ~/.git-prompt.sh
 
-PS1='\e]0;\u@\H\a' # title
+PPP='\n'
 
-PS1="$PS1"'\e[38;5;136m' # dark yellow
-PS1="$PS1"'['
-PS1="$PS1"'\[\033[93m\]' # yellow
-PS1="$PS1"'\w' # path
-PS1="$PS1"'\e[38;5;136m' # dark yellow
-PS1="$PS1"']'
+PPP="$PPP"'\e[38;5;136m' # dark yellow
+PPP="$PPP"'['
+PPP="$PPP"'\[\033[93m\]' # yellow
+PPP="$PPP"'\w' # path
+PPP="$PPP"'\e[38;5;136m' # dark yellow
+PPP="$PPP"']'
 
-PS1="$PS1"'\[\033[34m\]' # blue
-PS1="$PS1"'$(__git_ps1 " ['
-PS1="$PS1"'\[\033[94m\]' # cyan
-PS1="$PS1"'%s' # git branch
-PS1="$PS1"'\[\033[34m\]' # blue
-PS1="$PS1"']")'
+PPP="$PPP"'\[\033[34m\]' # blue
+PPP="$PPP"'$(__git_ps1 " ['
+PPP="$PPP"'\[\033[94m\]' # cyan
+PPP="$PPP"'%s' # git branch
+PPP="$PPP"'\[\033[34m\]' # blue
+PPP="$PPP"']")'
 
-PS1="$PS1"'\[\033[0m\] ' # white
-PS1="$PS1"'\A'
+PPP="$PPP"'\[\033[0m\] ' # white
+PPP="$PPP"'\A'
 
-PS1="$PS1"'\[\033[91m\]' # red
-PS1="$PS1"' ➤' # arrow 
-PS1="$PS1"'\[\033[0m\] ' # white
+PPP="$PPP"'\[\033[91m\]' # red
+PPP="$PPP"' ➤' # arrow 
+PPP="$PPP"'\[\033[0m\] ' # white
 
-
+PS1="$PPP"
 
 alias df='df -h'
 alias whence='type -a'                        # where, of a sort
@@ -98,13 +99,28 @@ alias go='git checkout '
 alias gk='gitk --all&'
 alias gx='gitx --all'
 alias up='cd ..'
+alias up2='cd ../..'
+alias up3='cd ../../..'
 alias edge='/c/Windows/explorer.exe microsoft-edge:ya.ru'
 alias hi='history | tail'
 alias weather='curl wttr.in'
+alias cal='cal -m'
 
 function exp { cd $1; explorer .; cd -; }
 function cdl { cd $1; pwd; ls; }
 function chrome { '/c/Program Files (x86)/Google/Chrome/Application/chrome.exe' $(cygpath -w $1); }
 function subl { '/c/Program Files/Sublime Text 3/subl.exe' $(cygpath -w $1); }
+function settitle () 
+{ 
+  if [ $# -eq 0 ]
+    then
+      PS1="$PPP"'\e]0;$PWD\a'
+    else
+      PS1="$PPP\e]0;$1\a"
+  fi
+}
+
+settitle
 
 cd
+
