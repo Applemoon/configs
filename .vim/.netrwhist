@@ -1,3 +1,10 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_cnt =8
 let g:netrw_dirhist_1='/d/YandexDisk'
+let g:netrw_dirhist_2='/home/marlettuser'
+let g:netrw_dirhist_3='/home/marlettuser/.vim'
+let g:netrw_dirhist_4='/home/marlettuser/.vim/bundle'
+let g:netrw_dirhist_5='/home/marlettuser/.vim/bundle/nerdtree'
+let g:netrw_dirhist_6='/home/marlettuser/.vim/bundle/nerdtree/autoload'
+let g:netrw_dirhist_7='/home/marlettuser'
+let g:netrw_dirhist_8='/d/YandexDisk'
