@@ -119,6 +119,7 @@ function settitle ()
       PS1="$PPP\e]0;$1\a"
   fi
 }
+function mkcd { mkdir $1; cd $1; }
 
 settitle
 
