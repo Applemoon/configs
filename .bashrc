@@ -59,19 +59,11 @@ source ~/.git-prompt.sh
 
 PPP='\n'
 
-PPP="$PPP"'\e[38;5;136m' # dark yellow
-PPP="$PPP"'['
 PPP="$PPP"'\[\033[93m\]' # yellow
-PPP="$PPP"'\w' # path
-PPP="$PPP"'\e[38;5;136m' # dark yellow
-PPP="$PPP"']'
+PPP="$PPP"'[\w]' # path
 
-PPP="$PPP"'\[\033[34m\]' # blue
-PPP="$PPP"'$(__git_ps1 " ['
 PPP="$PPP"'\[\033[94m\]' # cyan
-PPP="$PPP"'%s' # git branch
-PPP="$PPP"'\[\033[34m\]' # blue
-PPP="$PPP"']")'
+PPP="$PPP"'$(__git_ps1 " [%s]")' # git branch
 
 PPP="$PPP"'\[\033[0m\] ' # white
 PPP="$PPP"'\A'
