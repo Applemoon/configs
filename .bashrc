@@ -112,6 +112,22 @@ function settitle ()
   fi
 }
 function mkcd { mkdir $1; cd $1; }
+function mamaot {
+  if [ $# -eq 0 ]
+    then
+      DIRNAME="otchet"
+    else
+      DIRNAME=$1
+  fi
+  
+  mkdir $DIRNAME
+  for filename in `gs --porcelain | cut -d' ' -f3`
+  do
+    cp --parents "$filename" $DIRNAME
+  done
+  zip -r otchet.zip $DIRNAME
+  rm -r $DIRNAME
+}
 
 settitle
 
