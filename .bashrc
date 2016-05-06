@@ -93,7 +93,6 @@ alias gx='gitx --all'
 alias up='cd ..'
 alias up2='cd ../..'
 alias up3='cd ../../..'
-alias edge='/c/Windows/explorer.exe microsoft-edge:ya.ru'
 alias hi='history | tail'
 alias weather='curl wttr.in'
 alias cal='cal -m'
@@ -107,7 +106,6 @@ function exp {
   fi
 }
 function cdl { cd $1; pwd; ls; }
-function chrome { '/c/Program Files (x86)/Google/Chrome/Application/chrome.exe' $(cygpath -w $1); }
 function subl { '/c/Program Files/Sublime Text 3/subl.exe' $(cygpath -w $1); }
 function settitle () 
 { 
