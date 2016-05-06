@@ -98,7 +98,14 @@ alias hi='history | tail'
 alias weather='curl wttr.in'
 alias cal='cal -m'
 
-function exp { cd $1; explorer .; cd -; }
+function exp { 
+  if [ $# -eq 0 ]
+    then
+      explorer .; 
+    else
+      explorer $(cygpath -w $1); 
+  fi
+}
 function cdl { cd $1; pwd; ls; }
 function chrome { '/c/Program Files (x86)/Google/Chrome/Application/chrome.exe' $(cygpath -w $1); }
 function subl { '/c/Program Files/Sublime Text 3/subl.exe' $(cygpath -w $1); }
