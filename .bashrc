@@ -106,7 +106,14 @@ function exp {
   fi
 }
 function cdl { cd $1; pwd; ls; }
-function subl { '/c/Program Files/Sublime Text 3/subl.exe' $(cygpath -w $1); }
+function subl { 
+  if [ $# -eq 0 ]
+    then
+      '/c/Program Files/Sublime Text 3/subl.exe';
+    else
+      '/c/Program Files/Sublime Text 3/subl.exe' $(cygpath -w $1);
+  fi
+}
 function settitle () 
 { 
   if [ $# -eq 0 ]
