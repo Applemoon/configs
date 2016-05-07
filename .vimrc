@@ -1,13 +1,27 @@
+" запуск патогена для плагинов
+execute pathogen#infect()
+
 " номер строки
 set number
+
+" поиск во время ввода
+set incsearch
+
+" игнорирует регистр поиска, пока не введена заглавная
+set ignorecase smartcase
 
 " кодировка
 set encoding=utf8
 filetype plugin on
-colorscheme corporation
+"colorscheme corporation
+colorscheme gruvbox 
+set background=dark
 
 " переносы по словам
 set linebreak
+
+" подсветка строки с курсором
+set cursorline
 
 set wildmenu
 set wcm=<Tab>
@@ -23,9 +37,10 @@ map <F8> :emenu Encoding.<TAB>
 " русская раскладка
 set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
 
-" запуск патогена для плагинов
-execute pathogen#infect()
-
-" перечитывание вимрц на лету (вроде как)
-autocmd! bufwritepost ~/.vimrc execute "normal! :source ~/.vimrc"
+" настройки для airline
+set laststatus=2
+let g:airline_powerline_fonts = 1
+set timeoutlen=50
+set noshowmode
+let g:airline_theme='dark' 
 
