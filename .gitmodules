@@ -1,3 +1,12 @@
 [submodule "gruvbox"]
       path = .vim/bundle/gruvbox
       url = git://github.com/morhetz/gruvbox.git
+[submodule "vim-airline"]
+      path = .vim/bundle/vim-airline
+      url = git://github.com/vim-airline/vim-airline
+[submodule "nerdtree"]
+      path = .vim/bundle/nerdtree
+      url = git://github.com/scrooloose/nerdtree.git
+;[submodule "nerdcommenter"]
+      ;path = .vim/bundle/nerdcommenter
+      ;url = git://github.com/vim-airline/vim-airline
