@@ -96,6 +96,7 @@ alias up3='cd ../../..'
 alias hi='history | tail'
 alias weather='curl wttr.in'
 alias cal='cal -m'
+alias cs='cygstart'
 
 function exp { 
   if [ $# -eq 0 ]
