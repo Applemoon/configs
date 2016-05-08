@@ -12,8 +12,10 @@ set ignorecase smartcase
 
 " кодировка
 set encoding=utf8
+
 filetype plugin on
-"colorscheme corporation
+
+" тема
 colorscheme gruvbox 
 set background=dark
 
@@ -26,7 +28,7 @@ set cursorline
 set wildmenu
 set wcm=<Tab>
 
-" выбор кодировки файла по F8
+" выбор кодировки файла по <F8>
 menu Encoding.koi8-r :e ++enc=koi8-r ++ff=unix<CR>
 menu Encoding.windows-1251 :e ++enc=cp1251 ++ff=dos<CR>
 menu Encoding.cp866 :e ++enc=cp866 ++ff=dos<CR>
@@ -40,7 +42,9 @@ set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNO
 " настройки для airline
 set laststatus=2
 let g:airline_powerline_fonts = 1
-set timeoutlen=50
-set noshowmode
+set noshowmode " убрать дополнительное отображение режима
 let g:airline_theme='dark' 
+
+" отображать введенную команду
+set showcmd
 
