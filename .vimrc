@@ -1,3 +1,6 @@
+" контраст темы gruvbox
+let g:gruvbox_contrast_dark = 'hard'
+
 " запуск патогена для плагинов
 execute pathogen#infect()
 
