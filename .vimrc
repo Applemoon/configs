@@ -51,3 +51,6 @@ let g:airline_theme='dark'
 " отображать введенную команду
 set showcmd
 
+" пробел как pagedown
+nmap <Space> <PageDown>
+
