@@ -1,6 +1,6 @@
 BoldAsFont=yes
 FontHeight=10
-CursorType=line
+CursorType=underscore
 Transparency=off
 Font=DejaVu Sans Mono for Powerline
 Locale=C
