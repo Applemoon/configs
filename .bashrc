@@ -150,7 +150,7 @@ function settitle ()
   fi
 }
 function mkcd { mkdir $1; cd $1; }
-function mamaot {
+function mo {
   if [ $# -eq 0 ]
     then
       DIRNAME="otchet"
@@ -159,12 +159,16 @@ function mamaot {
   fi
   
   mkdir $DIRNAME
-  for filename in `gs --porcelain | cut -d' ' -f3`
+  #for filename in `git ls-files -m`
+  for filename in $(mov)
   do
     cp --parents "$filename" $DIRNAME
   done
   zip -r otchet.zip $DIRNAME
   rm -r $DIRNAME
+}
+function mov { 
+  git ls-files -m
 }
 
 settitle
