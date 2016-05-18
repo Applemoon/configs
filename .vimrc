@@ -25,8 +25,8 @@ set background=dark
 " переносы по словам
 set linebreak
 
-" подсветка строки с курсором
-set cursorline
+" подсветка строки с курсором (тормозит)
+"set cursorline
 
 set wildmenu
 set wcm=<Tab>
