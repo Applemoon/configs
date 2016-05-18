@@ -65,9 +65,6 @@ PPP="$PPP"'[\w]' # path
 PPP="$PPP"'\[\033[94m\]' # cyan
 PPP="$PPP"'$(__git_ps1 " [%s]")' # git branch
 
-PPP="$PPP"'\[\033[0m\] ' # white
-PPP="$PPP"'\A'
-
 PPP="$PPP"'\[\033[91m\]' # red
 PPP="$PPP"' ➤' # arrow 
 PPP="$PPP"'\[\033[0m\] ' # white
@@ -159,7 +156,6 @@ function mo {
   fi
   
   mkdir $DIRNAME
-  #for filename in `git ls-files -m`
   for filename in $(mov)
   do
     cp --parents "$filename" $DIRNAME
