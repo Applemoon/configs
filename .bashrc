@@ -166,6 +166,13 @@ function mo {
 function mov { 
   git ls-files -m
 }
+function r {
+  if [ $? -eq 0 ]; then
+    echo -en "\n\033[32m[OK]\033[0m\n"
+  else
+    echo -en "\n[\03331m[FAIL]\033[0m\n"
+  fi
+}
 
 settitle
 
