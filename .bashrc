@@ -94,6 +94,7 @@ alias hi='history | tail'
 alias weather='curl wttr.in'
 alias cal='cal -m'
 alias cs='cygstart'
+alias vless='/usr/share/vim/vim74/macros/less.sh'
 
 alias д='l'
 alias ды='ls'
