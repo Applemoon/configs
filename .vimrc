@@ -54,3 +54,5 @@ set showcmd
 " пробел как pagedown
 nmap <Space> <PageDown>
 
+" подсветка переменных
+autocmd CursorMoved * exe printf('match MatchParen /\V\<%s\>/', escape(expand('<cword>'), '/\'))
