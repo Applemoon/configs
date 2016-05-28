@@ -56,3 +56,13 @@ nmap <Space> <PageDown>
 
 " подсветка переменных
 autocmd CursorMoved * exe printf('match MatchParen /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+
+" привычная работа с мыщью
+set mouse=a
+
+" перемещение по вкладкам
+imap <F5> <Esc> :tabprev <CR>i
+map <F5> :tabprev <CR>
+imap <F6> <Esc> :tabnext <CR>i
+map <F6> :tabnext <CR>
+
