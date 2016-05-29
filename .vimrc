@@ -54,8 +54,9 @@ set showcmd
 " пробел как pagedown
 nmap <Space> <PageDown>
 
-" подсветка переменных
-autocmd CursorMoved * exe printf('match MatchParen /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+" подсветка переменных по <F12>
+autocmd CursorMoved * exe exists("hluc")?hluc?printf('match MatchParen /\V\<%s\>/', escape(expand('<cword>'), '/\')):'match none':""
+nnoremap <F12> :exe "let hluc=exists(\"hluc\")?hluc*-1+1:1"<CR>
 
 " привычная работа с мыщью
 set mouse=a
@@ -66,3 +67,5 @@ map <F5> :tabprev <CR>
 imap <F6> <Esc> :tabnext <CR>i
 map <F6> :tabnext <CR>
 
+" сохранение файла по <F2>
+nnoremap <F2> :w<CR>
