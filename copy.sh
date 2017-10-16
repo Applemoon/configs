@@ -1,4 +1,6 @@
-#!/usr/bin/bash
+#!/bin/bash
+
+git submodule update --init --recursive
 
 mv ~/.vim{,-old}
 cp -r .vim ~
