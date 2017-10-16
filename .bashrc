@@ -60,7 +60,8 @@ source ~/.git-prompt.sh
 PPP='\n'
 
 PPP="$PPP"'\[\033[93m\]' # yellow
-PPP="$PPP"'[\w]' # path
+PPP="$PPP"'[\h]' # host
+PPP="$PPP"'[\W]' # path
 
 PPP="$PPP"'\[\033[94m\]' # cyan
 PPP="$PPP"'$(__git_ps1 " [%s]")' # git branch
@@ -87,6 +88,7 @@ alias gd='git diff'
 alias go='git checkout '
 alias gk='gitk --all&'
 alias gx='gitx --all'
+alias gh='git hist'
 alias up='cd ..'
 alias up2='cd ../..'
 alias up3='cd ../../..'
@@ -95,6 +97,7 @@ alias weather='curl wttr.in'
 alias cal='cal -m'
 alias cs='cygstart'
 alias vless='/usr/share/vim/vim74/macros/less.sh'
+alias jn='jupyter-notebook'
 
 alias д='l'
 alias ды='ls'
@@ -130,14 +133,6 @@ function exp {
   fi
 }
 function cdl { cd $1; pwd; ls; }
-function subl { 
-  if [ $# -eq 0 ]
-    then
-      '/c/Program Files/Sublime Text 3/subl.exe';
-    else
-      '/c/Program Files/Sublime Text 3/subl.exe' $(cygpath -w $1);
-  fi
-}
 function settitle () 
 { 
   if [ $# -eq 0 ]
