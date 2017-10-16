@@ -2,21 +2,21 @@
 
 git submodule update --init --recursive
 
-mv ~/.vim{,-old}
+mv ~/.vim .vim-old
 cp -r .vim ~
 
-mv ~/.bashrc{,-old}
+mv ~/.bashrc .bashrc-old
 cp .bashrc ~
 
-mv ~/.git-prompt{,-old}
+mv ~/.git-prompt .git-prompt-old
 cp .git-prompt ~
 
-mv ~/.inputrc{,-old}
+mv ~/.inputrc .inputrc-old
 cp .inputrc ~
 
-mv ~/.minttyrc{,-old}
+mv ~/.minttyrc .minttyrc-old
 cp .minttyrc ~
 
-mv ~/.vimrc{,-old}
+mv ~/.vimrc .vimrc-old
 cp .vimrc ~
 
