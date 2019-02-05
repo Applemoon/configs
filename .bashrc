@@ -55,20 +55,30 @@ function cd
 }
 
 shopt -s cdspell
-source ~/.git-prompt.sh
+
+parse_git_branch() {
+   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ [\1]/'
+}
 
 PPP='\n'
 
-PPP="$PPP"'\[\033[93m\]' # yellow
-PPP="$PPP"'[\h]' # host
-PPP="$PPP"'[\W]' # path
+#PPP="$PPP"'\[\033[93m\]' # yellow
+#PPP="$PPP"'[\h]' # host
+#PPP="$PPP"'[\W]' # path
+#
+#PPP="$PPP"'\[\033[94m\]' # cyan
+#PPP="$PPP"'$(__git_ps1 " [%s]")' # git branch
+#
+#PPP="$PPP"'\[\033[91m\]' # red
+#PPP="$PPP"' ➤' # arrow 
+#PPP="$PPP"'\[\033[0m\] ' # white
 
-PPP="$PPP"'\[\033[94m\]' # cyan
-PPP="$PPP"'$(__git_ps1 " [%s]")' # git branch
-
-PPP="$PPP"'\[\033[91m\]' # red
-PPP="$PPP"' ➤' # arrow 
-PPP="$PPP"'\[\033[0m\] ' # white
+PPP='${debian_chroot:+($debian_chroot)}'
+PPP="$PPP"'\[\033[01;32m\]\u'
+PPP="$PPP"'\[\033[00m\]:'
+PPP="$PPP"'\[\033[01;34m\]\w'
+PPP="$PPP"'\[\033[01;31m\]$(parse_git_branch)'
+PPP="$PPP"'\[\033[00m\]\$ '
 
 PS1="$PPP"
 
@@ -97,7 +107,6 @@ alias weather='curl wttr.in'
 alias cal='cal -m'
 alias cs='cygstart'
 alias vless='/usr/share/vim/vim74/macros/less.sh'
-alias jn='jupyter-notebook'
 
 alias д='l'
 alias ды='ls'
@@ -133,28 +142,21 @@ function exp {
   fi
 }
 function cdl { cd $1; pwd; ls; }
-function settitle () 
-{ 
-  if [ $# -eq 0 ]
-    then
-      PS1="$PPP"'\e]0;$PWD\a'
-    else
-      PS1="$PPP\e]0;$1\a"
-  fi
-}
 function mkcd { mkdir $1; cd $1; }
 function mov { 
   git ls-files -m
 }
-function r {
-  if [ $? -eq 0 ]; then
-    echo -en "\n\033[32m[OK]\033[0m\n"
-  else
-    echo -en "\n[\03331m[FAIL]\033[0m\n"
-  fi
-}
 
-settitle
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 cd
 
