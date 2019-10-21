@@ -60,7 +60,7 @@ nmap <Space> <PageDown>
 autocmd CursorMoved * exe exists("hluc")?hluc?printf('match MatchParen /\V\<%s\>/', escape(expand('<cword>'), '/\')):'match none':""
 nnoremap <F12> :exe "let hluc=exists(\"hluc\")?hluc*-1+1:1"<CR>
 
-" привычная работа с мыщью
+" привычная работа с мышью
 set mouse=a
 
 " перемещение по вкладкам
