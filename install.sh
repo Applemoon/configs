@@ -7,7 +7,7 @@ git submodule update --init --recursive
 mv ~/.vim ~/.vim-old
 cp -r .vim ~
 
-cat .bashrc >> ~/.bashrc
+#cat .bashrc >> ~/.bashrc
 cat .bashrc >> ~/.zshrc
 
 mv ~/.vimrc ~/.vimrc-old
