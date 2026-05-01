@@ -1,24 +1,18 @@
 [submodule "gruvbox"]
-      path = .vim/bundle/gruvbox
-      url = git://github.com/morhetz/gruvbox.git
+    path = .vim/bundle/gruvbox
+    url = https://github.com/morhetz/gruvbox.git
 [submodule "vim-airline"]
-      path = .vim/bundle/vim-airline
-      url = git://github.com/vim-airline/vim-airline
+    path = .vim/bundle/vim-airline
+    url = https://github.com/vim-airline/vim-airline
 [submodule "vim-airline-themes"]
-      path = .vim/bundle/vim-airline-themes
-      url = git://github.com/vim-airline/vim-airline-themes
-[submodule "nerdtree"]
-      path = .vim/bundle/nerdtree
-      url = git://github.com/scrooloose/nerdtree.git
+    path = .vim/bundle/vim-airline-themes
+    url = https://github.com/vim-airline/vim-airline-themes
 [submodule "nerdcommenter"]
-      path = .vim/bundle/nerdcommenter
-      url = git://github.com/scrooloose/nerdcommenter
-[submodule "vim-fugitive"]
-      path = .vim/bundle/vim-fugitive
-      url = git://github.com/tpope/vim-fugitive
+    path = .vim/bundle/nerdcommenter
+    url = https://github.com/scrooloose/nerdcommenter
 [submodule "vim-markdown"]
-      path = .vim/bundle/vim-markdown
-      url = git://github.com/plasticboy/vim-markdown
+    path = .vim/bundle/vim-markdown
+    url = https://github.com/plasticboy/vim-markdown
 [submodule "vim-signature"]
-      path = .vim/bundle/vim-signature
-      url = git://github.com/kshenoy/vim-signature
+    path = .vim/bundle/vim-signature
+    url = https://github.com/kshenoy/vim-signature

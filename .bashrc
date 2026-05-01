@@ -1,6 +1,0 @@
-alias gs='git status'
-alias up='cd ..'
-alias up2='cd ../..'
-alias up3='cd ../../..'
-alias up4='cd ../../../..'
-alias hi='history | tail'
