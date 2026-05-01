@@ -6,25 +6,29 @@ info()  { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 
-# ─── Проверки ─────────────────────────────────────────────────────────────────
+# ─── Checks ───────────────────────────────────────────────────────────────────
 [[ -f ".vimrc" && -f ".gitconfig" ]] \
-  || error "Запусти скрипт из корня репо: cd ~/dotfiles && ./install.sh"
+  || error "Run this script from the repo root: cd /path/to/configs && ./install.sh"
 
-command -v brew &>/dev/null || error "Homebrew не установлен: https://brew.sh"
+command -v brew &>/dev/null || error "Homebrew is not installed: https://brew.sh"
 
 # ─── Homebrew ─────────────────────────────────────────────────────────────────
-info "Обновляю Homebrew..."
+info "Updating Homebrew..."
 brew update
 
-info "Устанавливаю пакеты из Brewfile..."
+info "Installing packages from Brewfile..."
 brew bundle
+
+# ─── Fonts ────────────────────────────────────────────────────────────────────
+info "Installing fonts..."
+cp fonts/*.ttf ~/Library/Fonts/
 
 # ─── Oh My Zsh ────────────────────────────────────────────────────────────────
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-  info "Устанавливаю Oh My Zsh..."
+  info "Installing Oh My Zsh..."
   RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 else
-  warn "Oh My Zsh уже установлен — пропускаю"
+  warn "Oh My Zsh is already installed — skipping"
 fi
 
 # ─── you-should-use ───────────────────────────────────────────────────────────
@@ -32,25 +36,25 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 YOU_SHOULD_USE_DIR="$ZSH_CUSTOM/plugins/you-should-use"
 
 if [[ ! -d "$YOU_SHOULD_USE_DIR" ]]; then
-  info "Клонирую плагин you-should-use..."
+  info "Cloning you-should-use plugin..."
   git clone https://github.com/MichaelAquilina/zsh-you-should-use.git "$YOU_SHOULD_USE_DIR"
 else
-  warn "you-should-use уже установлен — пропускаю"
+  warn "you-should-use is already installed — skipping"
 fi
 
-# ─── plugins в .zshrc ─────────────────────────────────────────────────────────
+# ─── plugins in .zshrc ────────────────────────────────────────────────────────
 PLUGINS_LINE="plugins=(git you-should-use macos z history)"
 
 if grep -qF "$PLUGINS_LINE" "$HOME/.zshrc" 2>/dev/null; then
-  warn "plugins уже обновлены — пропускаю"
+  warn "plugins already updated — skipping"
 elif grep -q "^plugins=(" "$HOME/.zshrc" 2>/dev/null; then
-  info "Обновляю plugins в .zshrc..."
+  info "Updating plugins in .zshrc..."
   sed -i '' "s/^plugins=(.*$/$PLUGINS_LINE/" "$HOME/.zshrc"
 else
-  warn "Строка plugins=(...) не найдена в .zshrc — пропускаю"
+  warn "plugins=(...) line not found in .zshrc — skipping"
 fi
 
-# ─── source-строки в .zshrc ───────────────────────────────────────────────────
+# ─── source lines in .zshrc ───────────────────────────────────────────────────
 BREW_PREFIX="$(brew --prefix)"
 ZSH_ADDITIONS="
 # ── Added by install.sh ──────────────────────────────────────────────────────
@@ -62,9 +66,9 @@ source ${BREW_PREFIX}/share/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh"
 
 if grep -q "Added by install.sh" "$HOME/.zshrc" 2>/dev/null; then
-  warn "source-строки уже есть в .zshrc — пропускаю"
+  warn "source lines already present in .zshrc — skipping"
 else
-  info "Дописываю source-строки в .zshrc..."
+  info "Appending source lines to .zshrc..."
   echo "$ZSH_ADDITIONS" >> "$HOME/.zshrc"
 fi
 
@@ -72,11 +76,11 @@ fi
 backup_and_copy() {
   local src="$1" dst="$2"
   if [[ -e "$dst" && ! -e "${dst}.backup" ]]; then
-    warn "Сохраняю $dst → ${dst}.backup"
+    warn "Backing up $dst → ${dst}.backup"
     mv "$dst" "${dst}.backup"
   fi
   cp -r "$src" "$dst"
-  info "Скопирован: $src → $dst"
+  info "Copied: $src → $dst"
 }
 
 backup_and_copy ".vim"   "$HOME/.vim"
@@ -84,9 +88,9 @@ backup_and_copy ".vimrc" "$HOME/.vimrc"
 
 # ─── .gitconfig ───────────────────────────────────────────────────────────────
 if grep -qF "$(cat .gitconfig)" "$HOME/.gitconfig" 2>/dev/null; then
-  warn ".gitconfig уже содержит эти настройки — пропускаю"
+  warn ".gitconfig already contains these settings — skipping"
 else
-  info "Добавляю .gitconfig..."
+  info "Appending .gitconfig..."
   cat .gitconfig >> "$HOME/.gitconfig"
 fi
 
@@ -95,30 +99,29 @@ if [[ -f "karabiner.json" ]]; then
   KARABINER_DIR="$HOME/.config/karabiner"
   mkdir -p "$KARABINER_DIR"
   if [[ -f "$KARABINER_DIR/karabiner.json" && ! -f "$KARABINER_DIR/karabiner.json.backup" ]]; then
-    warn "Сохраняю существующий karabiner.json → karabiner.json.backup"
+    warn "Backing up existing karabiner.json → karabiner.json.backup"
     cp "$KARABINER_DIR/karabiner.json" "$KARABINER_DIR/karabiner.json.backup"
   fi
   cp "karabiner.json" "$KARABINER_DIR/karabiner.json"
-  info "Karabiner конфиг скопирован"
+  info "Karabiner config copied"
 else
-  warn "karabiner.json не найден в репо — пропускаю"
+  warn "karabiner.json not found in repo — skipping"
 fi
 
-
 # ─── Git submodules ───────────────────────────────────────────────────────────
-info "Обновляю submodules..."
+info "Updating submodules..."
 git submodule sync
 git submodule update --init --recursive
 
 # ─── macOS defaults ───────────────────────────────────────────────────────────
-info "Применяю macOS настройки..."
+info "Applying macOS settings..."
 
-defaults write NSGlobalDomain   AppleShowAllExtensions -bool true    # показывать расширения файлов
-defaults write com.apple.finder ShowPathbar            -bool true    # путь к файлу внизу окна Finder
-defaults write com.apple.dock   show-recents           -bool false   # убрать недавние приложения из Dock
-defaults write com.apple.dock   orientation            -string "left" # Dock слева
+defaults write NSGlobalDomain   AppleShowAllExtensions -bool true     # show all file extensions
+defaults write com.apple.finder ShowPathbar            -bool true     # show path bar in Finder
+defaults write com.apple.dock   show-recents           -bool false    # hide recent apps from Dock
+defaults write com.apple.dock   orientation            -string "left" # Dock on the left
 
 killall Finder
 killall Dock
 
-info "✓ Готово! Выполни: source ~/.zshrc"
+info "✓ Done! Run: source ~/.zshrc"

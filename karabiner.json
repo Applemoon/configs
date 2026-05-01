@@ -60,7 +60,7 @@
                     "identifiers": { "is_keyboard": true },
                     "simple_modifications": [
                         {
-                            "from": { "key_code": "right_option" },
+                            "from": { "key_code": "right_command" },
                             "to": [{ "key_code": "delete_or_backspace" }]
                         }
                     ]
