@@ -6,18 +6,29 @@ info()  { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 
-# ─── Checks ───────────────────────────────────────────────────────────────────
-[[ -f ".vimrc" && -f ".gitconfig" ]] \
-  || error "Run this script from the repo root: cd /path/to/configs && ./install.sh"
-
-command -v brew &>/dev/null || error "Homebrew is not installed: https://brew.sh"
+# ─── Clone repo if running via curl ──────────────────────────────────────────
+if [[ ! -f ".vimrc" ]]; then
+  printf "Clone to? [~/Developer/configs]: " && read DIR
+  DIR="${DIR:-$HOME/Developer/configs}"
+  DIR="${DIR/#\~/$HOME}"
+  git clone --recurse-submodules "https://github.com/Applemoon/configs.git" "$DIR"
+  cd "$DIR"
+  exec bash install.sh
+fi
 
 # ─── Homebrew ─────────────────────────────────────────────────────────────────
+if ! command -v brew &>/dev/null; then
+  info "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  # Add brew to PATH for Apple Silicon (no-op on Intel)
+  eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || true)"
+fi
+
 info "Updating Homebrew..."
 brew update
 
 info "Installing packages from Brewfile..."
-brew bundle
+brew bundle --no-upgrade
 
 # ─── Fonts ────────────────────────────────────────────────────────────────────
 info "Installing fonts..."

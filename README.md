@@ -13,7 +13,7 @@ macOS config files for zsh, vim, git, and Karabiner.
 ## Install
 
 ```bash
-bash ./install.sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Applemoon/configs/install.sh)"
 ```
 
 ## After install
