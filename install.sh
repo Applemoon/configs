@@ -69,6 +69,7 @@ fi
 BREW_PREFIX="$(brew --prefix)"
 ZSH_ADDITIONS="
 # ── Added by install.sh ──────────────────────────────────────────────────────
+alias cat=bat
 source ${BREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ${BREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ${BREW_PREFIX}/share/powerlevel10k/powerlevel10k.zsh-theme
