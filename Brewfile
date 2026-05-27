@@ -1,7 +1,9 @@
 brew "tree"
+brew "bat"
 brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "powerlevel10k"
+brew "rtk"
 
 cask "karabiner-elements"
 cask "homerow"
