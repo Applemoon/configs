@@ -5,7 +5,35 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Hyper+a -> Russian, Hyper+s -> English",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "a",
+                                    "modifiers": {
+                                        "mandatory": ["left_command", "left_control", "left_option", "left_shift"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "select_input_source": { "language": "^ru$" } }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "s",
+                                    "modifiers": {
+                                        "mandatory": ["left_command", "left_control", "left_option", "left_shift"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "select_input_source": { "language": "^en$" } }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Right Option → Switch Input Source (Ctrl+Space)",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
