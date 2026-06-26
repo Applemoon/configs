@@ -7,11 +7,12 @@ warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 
 # ─── Clone repo if running via curl ──────────────────────────────────────────
+REPO_URL="https://github.com/Applemoon/configs.git"
 if [[ ! -f ".vimrc" ]]; then
   printf "Clone to? [~/Developer/configs]: " && read DIR
   DIR="${DIR:-$HOME/Developer/configs}"
   DIR="${DIR/#\~/$HOME}"
-  git clone --recurse-submodules "https://github.com/Applemoon/configs.git" "$DIR"
+  git clone --recurse-submodules "$REPO_URL" "$DIR"
   cd "$DIR"
   exec bash install.sh
 fi
@@ -20,8 +21,10 @@ fi
 if ! command -v brew &>/dev/null; then
   info "Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  # Add brew to PATH for Apple Silicon (no-op on Intel)
-  eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || true)"
+  # Add brew to PATH for this session (Apple Silicon: /opt/homebrew, Intel: /usr/local)
+  for brew_path in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    [[ -x "$brew_path" ]] && eval "$("$brew_path" shellenv)" && break
+  done
 fi
 
 info "Updating Homebrew..."
@@ -54,13 +57,22 @@ else
 fi
 
 # ─── plugins in .zshrc ────────────────────────────────────────────────────────
-PLUGINS_LINE="plugins=(git you-should-use macos z history)"
+# Merge our plugins into the existing list without clobbering the user's own.
+DESIRED_PLUGINS="git you-should-use macos z history"
 
-if grep -qF "$PLUGINS_LINE" "$HOME/.zshrc" 2>/dev/null; then
-  warn "plugins already updated — skipping"
-elif grep -q "^plugins=(" "$HOME/.zshrc" 2>/dev/null; then
-  info "Updating plugins in .zshrc..."
-  sed -i '' "s/^plugins=(.*$/$PLUGINS_LINE/" "$HOME/.zshrc"
+if grep -q "^plugins=(" "$HOME/.zshrc" 2>/dev/null; then
+  current="$(sed -n 's/^plugins=(\(.*\))/\1/p' "$HOME/.zshrc")"
+  merged="$current"
+  for p in $DESIRED_PLUGINS; do
+    grep -qw "$p" <<<"$current" || merged="$merged $p"
+  done
+  merged="$(echo "$merged" | xargs)"  # trim/normalize whitespace
+  if [[ "$merged" == "$current" ]]; then
+    warn "plugins already up to date — skipping"
+  else
+    info "Updating plugins in .zshrc..."
+    sed -i '' "s/^plugins=(.*$/plugins=($merged)/" "$HOME/.zshrc"
+  fi
 else
   warn "plugins=(...) line not found in .zshrc — skipping"
 fi
@@ -69,7 +81,7 @@ fi
 BREW_PREFIX="$(brew --prefix)"
 ZSH_ADDITIONS="
 # ── Added by install.sh ──────────────────────────────────────────────────────
-alias cat=bat
+command -v bat &>/dev/null && alias cat=bat
 source ${BREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ${BREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ${BREW_PREFIX}/share/powerlevel10k/powerlevel10k.zsh-theme
@@ -91,6 +103,7 @@ backup_and_copy() {
     warn "Backing up $dst → ${dst}.backup"
     mv "$dst" "${dst}.backup"
   fi
+  rm -rf "$dst"          # avoid cp -r nesting into an existing dir on re-runs
   cp -r "$src" "$dst"
   info "Copied: $src → $dst"
 }
@@ -99,7 +112,7 @@ backup_and_copy ".vim"   "$HOME/.vim"
 backup_and_copy ".vimrc" "$HOME/.vimrc"
 
 # ─── .gitconfig ───────────────────────────────────────────────────────────────
-if grep -qF "$(cat .gitconfig)" "$HOME/.gitconfig" 2>/dev/null; then
+if grep -q "hist = log" "$HOME/.gitconfig" 2>/dev/null; then
   warn ".gitconfig already contains these settings — skipping"
 else
   info "Appending .gitconfig..."
@@ -133,7 +146,7 @@ defaults write com.apple.finder ShowPathbar            -bool true     # show pat
 defaults write com.apple.dock   show-recents           -bool false    # hide recent apps from Dock
 defaults write com.apple.dock   orientation            -string "left" # Dock on the left
 
-killall Finder
-killall Dock
+killall Finder || true
+killall Dock || true
 
 info "✓ Done! Run: source ~/.zshrc"

@@ -13,8 +13,10 @@ macOS config files for zsh, vim, git, and Karabiner.
 ## Install
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Applemoon/configs/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Applemoon/configs/HEAD/install.sh)"
 ```
+
+> This pipes a remote script into your shell — [read `install.sh`](install.sh) before running it. It backs up any files it overwrites to `*.backup`.
 
 ## After install
 
