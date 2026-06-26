@@ -5,7 +5,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Hyper+a -> Russian, Hyper+s -> English",
+                        "description": "Hyper+a -> Russian, Hyper+s -> English, Hyper+d -> Toggle Serbian Cyrillic/Latin",
                         "manipulators": [
                             {
                                 "from": {
@@ -28,24 +28,39 @@
                                 },
                                 "to": [{ "select_input_source": { "language": "^en$" } }],
                                 "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Right Option → Switch Input Source (Ctrl+Space)",
-                        "enabled": false,
-                        "manipulators": [
+                            },
                             {
-                                "from": {
-                                    "key_code": "right_option",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [
+                                "conditions": [
                                     {
-                                        "key_code": "spacebar",
-                                        "modifiers": ["left_control"]
+                                        "input_sources": [{ "input_source_id": "^com\\.apple\\.keylayout\\.Serbian$" }],
+                                        "type": "input_source_if"
                                     }
                                 ],
+                                "from": {
+                                    "key_code": "d",
+                                    "modifiers": {
+                                        "mandatory": ["left_command", "left_control", "left_option", "left_shift"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "select_input_source": { "input_source_id": "^com\\.apple\\.keylayout\\.Serbian-Latin$" } }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "input_sources": [{ "input_source_id": "^com\\.apple\\.keylayout\\.Serbian$" }],
+                                        "type": "input_source_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "d",
+                                    "modifiers": {
+                                        "mandatory": ["left_command", "left_control", "left_option", "left_shift"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "select_input_source": { "input_source_id": "^com\\.apple\\.keylayout\\.Serbian$" } }],
                                 "type": "basic"
                             }
                         ]
