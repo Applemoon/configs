@@ -1,5 +1,7 @@
 brew "tree"
 brew "bat"
+brew "eza"
+brew "neovim"
 brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "powerlevel10k"

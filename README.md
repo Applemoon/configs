@@ -1,12 +1,13 @@
 # MacOS configs by Uvarov
 
-macOS config files for zsh, vim, git, and Karabiner.
+macOS config files for zsh, nvim, vim, git, and Karabiner. The installer **symlinks** everything into `$HOME`, so the repo stays the single source of truth.
 
 ## Includes
 
-- **zsh** — Oh My Zsh with Powerlevel10k, syntax highlighting, autosuggestions
-- **vim** — Gruvbox theme, NERDTree, vim-airline, and other plugins via Pathogen
-- **git** — aliases and global config
+- **zsh** — Oh My Zsh with Powerlevel10k, syntax highlighting, autosuggestions, eza
+- **nvim** — LazyVim (plugins pinned via `lazy-lock.json`); primary editor
+- **vim** — Gruvbox, vim-airline, and other plugins via Pathogen; lightweight fallback
+- **git** — shared config pulled in via `include.path`
 - **Karabiner-Elements** — `fn+hjkl` → arrow keys, right cmd → backspace
 - **Fonts** — MesloLGS NF (required for Powerlevel10k)
 

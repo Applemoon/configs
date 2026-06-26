@@ -4,31 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Personal macOS dotfiles repo (zsh, vim, git, Karabiner). This is the **canonical source of truth** for the user's configs — when editing any config (vim/git/karabiner/brew), edit it here first. Home-directory copies (`~/.vimrc`, etc.) are real files, not symlinks, and may drift from the repo. A setting that should persist must be put in **both** the repo and the home copy.
+Personal macOS dotfiles repo (zsh, vim, nvim/LazyVim, git, Karabiner). This is the **canonical source of truth** for the user's configs. The installer **symlinks** these files into `$HOME`, so editing a file here is live immediately — no copying, no drift. Edit configs here, not in `$HOME`.
 
-There is no build, lint, or test suite. The only "command" is the installer.
+There is no build or test suite. `install.sh` applies everything; `shellcheck` (CI) is the only lint.
 
 ## Install / apply changes
 
 ```bash
-bash install.sh          # idempotent; re-run to apply repo changes to the machine
+bash install.sh          # idempotent; re-run anytime
 ```
 
-`install.sh` is the heart of the repo and the only executable. It is **idempotent** — every step guards against re-running (greps for markers, checks for existing dirs, backs up before overwrite). When adding a new config step, preserve this property: guard the step, and back up the user's existing file to `*.backup` before copying over it (see `backup_and_copy`).
+`install.sh` is the heart of the repo and the only executable, run under `set -euo pipefail`. It is **idempotent** — every step guards against re-running. When adding a config, follow the existing pattern: add a `link "<repo-file>" "<dest>"` call. The `link()` helper backs up any existing real file to `*.backup` once, then symlinks; re-running is a no-op when the link is already correct.
 
-What it does, in order: bootstraps Homebrew → `brew bundle` from `Brewfile` → copies fonts → installs Oh My Zsh + the `you-should-use` plugin → rewrites the `plugins=(...)` line and appends a marked block to `~/.zshrc` → copies `.vim`/`.vimrc` (with backup) → appends `.gitconfig` → copies `karabiner.json` to `~/.config/karabiner/` → syncs git submodules → applies `defaults write` macOS tweaks.
+What it does, in order: bootstraps Homebrew → `brew bundle` from `Brewfile` → copies fonts → installs Oh My Zsh (`KEEP_ZSHRC=yes`) + the `you-should-use` plugin → updates git submodules → **symlinks** `.zshrc`, `.vimrc`, `.vim`, `nvim`, `karabiner.json` into place → registers `.gitconfig` via `git config --global --add include.path` → applies `defaults write` macOS tweaks.
 
-When run via `curl` (no `.vimrc` in cwd), it first clones the repo with `--recurse-submodules` and re-execs itself.
+When run via `curl` (no `.vimrc` in cwd), it first clones the repo with `--recurse-submodules` and re-execs itself. `REPO_DIR` is resolved as the script's own dir so symlinks point at absolute repo paths.
 
 ## Architecture notes
 
-- **Vim plugins are git submodules** under `.vim/bundle/`, loaded by **Pathogen** (`pathogen#infect()` in `.vimrc`). To add a plugin: `git submodule add <url> .vim/bundle/<name>`, then add it to `.gitmodules`. Don't hand-edit files inside `bundle/` — they're upstream checkouts.
-- **`.zshrc` is not in this repo.** zsh config lives only in the user's home `~/.zshrc`; the installer mutates it (plugins line + a fenced `# Added by install.sh` block with the bat alias and p10k/syntax-highlighting/autosuggestions `source` lines). Powerlevel10k itself comes from Homebrew, not Oh My Zsh themes.
-- **`.gitconfig`** in the repo is a fragment that gets *appended* to `~/.gitconfig`, not a full config.
-- **`karabiner.json`** — full Karabiner-Elements profile. Key rules: `fn+hjkl`→arrows, right cmd→backspace, and Hyper (⌘⌃⌥⇧) `+a/+s/+d` → switch input source to Russian/English/Serbian.
-- **Fonts** — `MesloLGS NF` (`fonts/*.ttf`) is required by Powerlevel10k; installed by copying into `~/Library/Fonts/`.
+- **Two editors, two plugin models — do not mix them:**
+  - **vim** (`.vimrc` + `.vim/`): plugins are **git submodules** under `.vim/bundle/`, loaded by **Pathogen**. Add via `git submodule add <url> .vim/bundle/<name>`. Don't hand-edit `bundle/` contents — upstream checkouts. Kept as a lightweight fallback for machines that only have `vim`.
+  - **nvim** (`nvim/` → `~/.config/nvim`): **LazyVim** starter. Plugins are managed by `lazy.nvim`, **not** submodules — pinned in `nvim/lazy-lock.json` (commit it for reproducibility). Never add nvim plugins as submodules. Primary editor (`EDITOR=nvim`).
+- **`.zshrc`** is repo-owned and symlinked. Oh My Zsh + Powerlevel10k (the theme comes from Homebrew, not OMZ themes). Brew-prefix-dependent `source` lines probe `/opt/homebrew` then `/usr/local` so the file is portable across Apple Silicon / Intel / Rosetta.
+- **`.gitconfig`** is a *fragment* pulled in via `include.path` in `~/.gitconfig` — this keeps the user's `user.name`/`email` out of the repo while versioning shared settings.
+- **`karabiner.json`** — full Karabiner profile. Rules: `fn+hjkl`→arrows, right cmd→backspace, Hyper (⌘⌃⌥⇧) `+a/+s/+d` → input source Russian/English/Serbian.
+- **Fonts** — `MesloLGS NF` (`fonts/*.ttf`), required by Powerlevel10k; **copied** into `~/Library/Fonts/` (not symlinked).
 
 ## Gotchas
 
-- The README raw-install URL and the clone URL inside `install.sh` both hardcode `Applemoon/configs` — keep them in sync if the remote ever changes.
-- `.gitignore` ignores `.vim/.netrwhist`.
+- The README raw-install URL and `REPO_URL` in `install.sh` both hardcode `Applemoon/configs` — keep in sync if the remote changes.
+- After importing a fresh LazyVim config, commit `nvim/lazy-lock.json`; it's generated by `:Lazy sync`, don't fabricate it by hand.
+- `.gitignore` ignores `.vim/.netrwhist`; `nvim/.gitignore` (from the LazyVim starter) ignores its own runtime junk.
