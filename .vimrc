@@ -7,7 +7,7 @@ let g:gruvbox_contrast_dark = 'hard'
 execute pathogen#infect()
 
 " номер строки
-set number
+set number relativenumber
 
 " поиск во время ввода
 set incsearch
@@ -18,6 +18,9 @@ set ignorecase smartcase
 " кодировка
 set encoding=utf8
 
+" y/p работают с системным буфером обмена ОС
+set clipboard=unnamedplus
+
 filetype plugin on
 
 " тема
@@ -27,8 +30,11 @@ set background=dark
 " переносы по словам
 set linebreak
 
-" подсветка строки с курсором (тормозит)
-"set cursorline
+" подсветка строки с курсором
+set cursorline
+
+" не сворачивать блоки в файле
+set nofoldenable
 
 set wildmenu
 set wcm=<Tab>
