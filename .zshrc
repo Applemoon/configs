@@ -61,6 +61,10 @@ chpwd() {
 # ── PATH ──────────────────────────────────────────────────────────────────────
 export PATH="$HOME/.local/bin:$PATH"
 
+# ── Local secrets (NOT tracked in git) ─────────────────────────────────────────
+# Tokens/keys live in ~/.zshrc.local, which is outside this repo so it never syncs.
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
