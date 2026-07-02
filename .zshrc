@@ -27,6 +27,9 @@ alias v=nvim
 command -v bat &>/dev/null && alias cat=bat
 alias flashcards='cd ~/Developer/flashcards && ./gradlew bootRun'
 
+# Clickable terminal links (e.g. file paths in Claude Code)
+export FORCE_HYPERLINK=1
+
 # ── Homebrew-installed zsh extras (portable across /opt/homebrew & /usr/local) ─
 for _brew_prefix in /opt/homebrew /usr/local; do
   [[ -d "$_brew_prefix/share/powerlevel10k" ]] && BREW_PREFIX="$_brew_prefix" && break
