@@ -93,6 +93,8 @@ link ".vimrc"         "$HOME/.vimrc"
 link ".vim"           "$HOME/.vim"
 link "nvim"           "$HOME/.config/nvim"
 link "karabiner.json" "$HOME/.config/karabiner/karabiner.json"
+link "ghostty/config"  "$HOME/.config/ghostty/config"
+link "ghostty/shaders" "$HOME/.config/ghostty/shaders"
 
 # ─── .gitconfig (via include, keeps user's name/email intact) ───────────────────
 GITCONFIG_PATH="$REPO_DIR/.gitconfig"

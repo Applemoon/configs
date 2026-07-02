@@ -16,3 +16,6 @@
 [submodule "vim-signature"]
     path = .vim/bundle/vim-signature
     url = https://github.com/kshenoy/vim-signature
+[submodule "ghostty/shaders"]
+	path = ghostty/shaders
+	url = https://github.com/sahaj-b/ghostty-cursor-shaders
