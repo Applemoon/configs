@@ -13,7 +13,7 @@ ZSH_THEME="robbyrussell"
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
-plugins=(git you-should-use macos z history eza)
+plugins=(git you-should-use macos z history eza command-not-found extract)
 
 source $ZSH/oh-my-zsh.sh
 
