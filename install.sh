@@ -89,6 +89,7 @@ link() {
 }
 
 link ".zshrc"         "$HOME/.zshrc"
+link ".p10k.zsh"      "$HOME/.p10k.zsh"
 link ".vimrc"         "$HOME/.vimrc"
 link ".vim"           "$HOME/.vim"
 link "nvim"           "$HOME/.config/nvim"
