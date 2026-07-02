@@ -14,7 +14,7 @@ jobs:
       - name: Run shellcheck
         uses: ludeeus/action-shellcheck@master
         with:
-          # shellcheck only supports sh/bash/ksh — exclude the zsh config it can't parse
-          ignore_names: .zshrc
+          # shellcheck only supports sh/bash/ksh — exclude the zsh configs it can't parse
+          ignore_names: .zshrc .p10k.zsh
         env:
           SHELLCHECK_OPTS: -e SC1090 -e SC1091   # ignore "can't follow sourced file"
