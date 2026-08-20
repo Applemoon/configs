@@ -27,6 +27,7 @@ alias v=nvim
 command -v bat &>/dev/null && alias cat=bat
 alias flashcards='cd ~/Developer/flashcards && ./gradlew bootRun'
 alias statusline='npx -y ccstatusline@latest'
+alias cl=claude
 
 # Clickable terminal links (e.g. file paths in Claude Code)
 export FORCE_HYPERLINK=1
