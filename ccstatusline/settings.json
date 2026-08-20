@@ -1,0 +1,127 @@
+{
+  "version": 3,
+  "lines": [
+    [
+      {
+        "id": "52a345b5-b2e5-4b7b-903b-d3ffa5e51ea6",
+        "type": "current-working-dir",
+        "backgroundColor": "bgBrightBlack",
+        "metadata": {
+          "fishStyle": "true"
+        }
+      },
+      {
+        "id": "5",
+        "type": "git-branch",
+        "color": "magenta",
+        "metadata": {
+          "hideNoGit": "true",
+          "linkToRepo": "true"
+        }
+      },
+      {
+        "id": "2a76b309-6379-415f-b154-78e4b2139731",
+        "type": "model",
+        "color": "cyan",
+        "backgroundColor": "bgBrightWhite"
+      },
+      {
+        "id": "8074e0dd-0ff8-4e22-a7ef-c2a34c9cc2c8",
+        "type": "thinking-effort",
+        "backgroundColor": "bgBrightCyan"
+      },
+      {
+        "id": "1ea76642-c938-4b97-9780-bb9b395d9c48",
+        "type": "context-bar",
+        "backgroundColor": "bgCyan",
+        "metadata": {
+          "display": "slider"
+        }
+      }
+    ],
+    [
+      {
+        "id": "ef98e2a0-767c-404f-9f6b-118c9f99b01a",
+        "type": "session-usage",
+        "backgroundColor": "bgBrightBlue",
+        "merge": true,
+        "metadata": {
+          "display": "slider",
+          "invert": "true"
+        }
+      },
+      {
+        "id": "c34c6498-31ac-4773-8a67-93890b058d65",
+        "type": "reset-timer",
+        "backgroundColor": "bgYellow"
+      },
+      {
+        "id": "e12382b3-db0f-42a0-8bbc-712d4f223aee",
+        "type": "weekly-usage",
+        "backgroundColor": "bgCyan",
+        "merge": true,
+        "metadata": {
+          "display": "slider",
+          "invert": "true"
+        }
+      },
+      {
+        "id": "935853fd-da87-4e6f-9f0a-9cae0be0f0b1",
+        "type": "weekly-reset-timer",
+        "backgroundColor": "bgBrightRed"
+      }
+    ],
+    [
+      {
+        "id": "399e6275-987d-4f9e-af57-889372abf5ee",
+        "type": "tokens-cached",
+        "backgroundColor": "bgWhite"
+      },
+      {
+        "id": "d61638ee-e161-4ff6-b450-bf05a8b46486",
+        "type": "tokens-input",
+        "backgroundColor": "bgBrightRed"
+      },
+      {
+        "id": "3e2efe59-2962-4b84-a311-e94efe0a6638",
+        "type": "tokens-output",
+        "backgroundColor": "bgWhite"
+      },
+      {
+        "id": "aaa03c3c-6a4a-4108-9251-604d07cb457a",
+        "type": "tokens-total",
+        "backgroundColor": "bgGreen"
+      }
+    ]
+  ],
+  "flexMode": "full-until-compact",
+  "compactThreshold": 60,
+  "colorLevel": 3,
+  "defaultPadding": " ",
+  "inheritSeparatorColors": false,
+  "globalBold": false,
+  "gitCacheTtlSeconds": 5,
+  "minimalistMode": false,
+  "powerline": {
+    "enabled": true,
+    "separators": [
+      ""
+    ],
+    "separatorInvertBackground": [
+      false
+    ],
+    "startCaps": [
+      ""
+    ],
+    "endCaps": [
+      ""
+    ],
+    "theme": "gruvbox",
+    "autoAlign": false,
+    "continueThemeAcrossLines": false
+  },
+  "installation": {
+    "method": "pinned",
+    "installedVersion": "2.2.22"
+  }
+}
