@@ -4,6 +4,7 @@ background-blur = 255
 font-size = 14
 theme = Gruvbox Dark Hard
 custom-shader = ~/.config/ghostty/shaders/cursor_warp.glsl
+copy-on-select = clipboard
 
 # ─── Раскладка ─────────────────────────────────────────────────────────────
 # Ctrl+<буква> независимо от раскладки клавиатуры.
