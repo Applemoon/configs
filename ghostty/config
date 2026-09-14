@@ -34,3 +34,9 @@ keybind = ctrl+key_w=text:\x17
 keybind = ctrl+key_x=text:\x18
 keybind = ctrl+key_y=text:\x19
 keybind = ctrl+key_z=text:\x1a
+
+# Переключение вкладок независимо от раскладки.
+# Дефолтные super+shift+[ / ] привязаны к символу, поэтому на кириллице
+# срабатывают как Х/Ъ. Привязка по физической позиции клавиши это чинит.
+keybind = super+shift+bracket_left=previous_tab
+keybind = super+shift+bracket_right=next_tab
