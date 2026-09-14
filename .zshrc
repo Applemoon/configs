@@ -31,8 +31,6 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 
 alias v=nvim
-command -v bat &>/dev/null && alias cat=bat
-alias flashcards='cd ~/Developer/flashcards && ./gradlew bootRun'
 alias cl=claude
 
 # Clickable terminal links (e.g. file paths in Claude Code)
