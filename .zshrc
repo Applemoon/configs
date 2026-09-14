@@ -5,6 +5,13 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# ── Homebrew ──────────────────────────────────────────────────────────────────
+# Must come before anything that looks up brew-installed commands (aliases,
+# plugins): /opt/homebrew/bin is not in /etc/paths the way /usr/local/bin is,
+# so without this the native Apple-silicon brew is invisible at this point.
+# Guarded: harmless if brew is not installed.
+[[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -26,7 +33,6 @@ export VISUAL="nvim"
 alias v=nvim
 command -v bat &>/dev/null && alias cat=bat
 alias flashcards='cd ~/Developer/flashcards && ./gradlew bootRun'
-alias statusline='npx -y ccstatusline@latest'
 alias cl=claude
 
 # Clickable terminal links (e.g. file paths in Claude Code)
@@ -47,16 +53,19 @@ unset _brew_prefix
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # ── eza ───────────────────────────────────────────────────────────────────────
-export EZA_ICONS_AUTO=1
+export EZA_ICONS_AUTO=auto
 
 # отображение файлов при переходе в папку
+# только в интерактивном шелле: в фоновых/скриптовых zsh командная подстановка
+# в chpwd-хуке ловит race на SIGCHLD и вешает процесс намертво
 chpwd() {
-    local count=$(eza -1 | wc -l)
+    [[ -o interactive ]] || return
+    local -a items=(*(N))  # подсчёт глоббингом: без форка ($(eza|wc) и был источником race)
 
-    if (( count <= 30 )); then
-        eza --icons=always
+    if (( ${#items} <= 30 )); then
+        l
     else
-        echo "$count files"
+        echo "${#items} files"
     fi
 }
 
