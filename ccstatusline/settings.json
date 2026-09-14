@@ -3,13 +3,89 @@
   "lines": [
     [
       {
-        "id": "52a345b5-b2e5-4b7b-903b-d3ffa5e51ea6",
+        "id": "9ac15480-8f34-474b-ad76-b473b2e234c9",
         "type": "current-working-dir",
-        "backgroundColor": "bgBrightBlack",
+        "backgroundColor": "bgBrightMagenta",
         "metadata": {
           "fishStyle": "true"
         }
       },
+      {
+        "id": "1",
+        "type": "model",
+        "color": "cyan"
+      },
+      {
+        "id": "0c8f4286-fabe-4a6b-a85f-4172089df9e2",
+        "type": "custom-command",
+        "backgroundColor": "bgBrightGreen",
+        "commandPath": "jq -r '.output_style.name // \"default\" | select(. != \"default\") | \"Style: \" + .'",
+        "timeout": 1000,
+        "merge": true
+      },
+      {
+        "id": "32956e89-4d74-44da-86ea-1170dec0665d",
+        "type": "thinking-effort",
+        "backgroundColor": "bgRed"
+      },
+      {
+        "id": "e3301aef-1a5c-486d-96ce-263ed28fd6f4",
+        "type": "context-bar",
+        "backgroundColor": "bgBrightBlack",
+        "metadata": {
+          "display": "slider"
+        }
+      }
+    ],
+    [
+      {
+        "id": "e1e505f2-b6a2-481c-b9bf-61dac221ea98",
+        "type": "session-usage",
+        "backgroundColor": "bgBrightCyan",
+        "merge": true,
+        "metadata": {
+          "display": "slider",
+          "invert": "true"
+        }
+      },
+      {
+        "id": "8690885d-1945-42e4-9cc5-53b68ae5a21b",
+        "type": "reset-timer",
+        "backgroundColor": "bgBrightGreen",
+        "metadata": {
+          "display": "time"
+        }
+      },
+      {
+        "id": "7622034f-460e-4044-8a62-58e80fdbc165",
+        "type": "weekly-usage",
+        "backgroundColor": "bgWhite",
+        "merge": true,
+        "metadata": {
+          "display": "slider",
+          "invert": "true"
+        }
+      },
+      {
+        "id": "79dd3b60-78ed-4c8b-98b0-a90480c3417a",
+        "type": "weekly-reset-timer",
+        "backgroundColor": "bgBrightMagenta",
+        "metadata": {
+          "display": "time",
+          "hours": "false",
+          "compact": "false"
+        }
+      },
+      {
+        "id": "c1a2b3d4-0001-4000-8000-000000000001",
+        "type": "cache-timer",
+        "backgroundColor": "bgYellow",
+        "metadata": {
+          "ttlSeconds": "3600"
+        }
+      }
+    ],
+    [
       {
         "id": "5",
         "type": "git-branch",
@@ -20,77 +96,27 @@
         }
       },
       {
-        "id": "2a76b309-6379-415f-b154-78e4b2139731",
-        "type": "model",
+        "id": "c1a2b3d4-0002-4000-8000-000000000002",
+        "type": "git-status",
+        "color": "yellow",
+        "metadata": {
+          "hideNoGit": "true"
+        }
+      },
+      {
+        "id": "c1a2b3d4-0003-4000-8000-000000000003",
+        "type": "git-ahead-behind",
         "color": "cyan",
-        "backgroundColor": "bgBrightWhite"
-      },
-      {
-        "id": "8074e0dd-0ff8-4e22-a7ef-c2a34c9cc2c8",
-        "type": "thinking-effort",
-        "backgroundColor": "bgBrightCyan"
-      },
-      {
-        "id": "1ea76642-c938-4b97-9780-bb9b395d9c48",
-        "type": "context-bar",
-        "backgroundColor": "bgCyan",
         "metadata": {
-          "display": "slider"
-        }
-      }
-    ],
-    [
-      {
-        "id": "ef98e2a0-767c-404f-9f6b-118c9f99b01a",
-        "type": "session-usage",
-        "backgroundColor": "bgBrightBlue",
-        "merge": true,
-        "metadata": {
-          "display": "slider",
-          "invert": "true"
+          "hideNoGit": "true"
         }
       },
       {
-        "id": "c34c6498-31ac-4773-8a67-93890b058d65",
-        "type": "reset-timer",
-        "backgroundColor": "bgYellow"
-      },
-      {
-        "id": "e12382b3-db0f-42a0-8bbc-712d4f223aee",
-        "type": "weekly-usage",
-        "backgroundColor": "bgCyan",
-        "merge": true,
-        "metadata": {
-          "display": "slider",
-          "invert": "true"
-        }
-      },
-      {
-        "id": "935853fd-da87-4e6f-9f0a-9cae0be0f0b1",
-        "type": "weekly-reset-timer",
-        "backgroundColor": "bgBrightRed"
-      }
-    ],
-    [
-      {
-        "id": "399e6275-987d-4f9e-af57-889372abf5ee",
-        "type": "tokens-cached",
-        "backgroundColor": "bgWhite"
-      },
-      {
-        "id": "d61638ee-e161-4ff6-b450-bf05a8b46486",
-        "type": "tokens-input",
-        "backgroundColor": "bgBrightRed"
-      },
-      {
-        "id": "3e2efe59-2962-4b84-a311-e94efe0a6638",
-        "type": "tokens-output",
-        "backgroundColor": "bgWhite"
-      },
-      {
-        "id": "aaa03c3c-6a4a-4108-9251-604d07cb457a",
-        "type": "tokens-total",
-        "backgroundColor": "bgGreen"
+        "id": "c1a2b3d4-0004-4000-8000-000000000004",
+        "type": "custom-command",
+        "backgroundColor": "bgBrightBlack",
+        "commandPath": "d=$(jq -r \".workspace.current_dir // .cwd\"); n=$(git -C \"$d\" status --porcelain 2>/dev/null | wc -l | tr -d \" \"); [ \"$n\" -gt 0 ] && echo \"📸 $n\" || true",
+        "timeout": 2000
       }
     ]
   ],
@@ -98,6 +124,7 @@
   "compactThreshold": 60,
   "colorLevel": 3,
   "defaultPadding": " ",
+  "defaultPaddingSide": "both",
   "inheritSeparatorColors": false,
   "globalBold": false,
   "gitCacheTtlSeconds": 5,

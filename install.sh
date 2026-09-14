@@ -98,6 +98,24 @@ link "ghostty/config"  "$HOME/.config/ghostty/config"
 link "ghostty/shaders" "$HOME/.config/ghostty/shaders"
 link "ccstatusline/settings.json" "$HOME/.config/ccstatusline/settings.json"
 
+# ─── ccstatusline (Claude Code status line, npm-only) ─────────────────────────
+if command -v ccstatusline &>/dev/null; then
+  warn "ccstatusline is already installed — skipping"
+else
+  info "Installing ccstatusline..."
+  npm install -g ccstatusline
+fi
+
+# ─── Vorssaint (menu bar toolkit) — settings live in UserDefaults, not a file ──
+# Snapshot in the repo: `defaults export com.vorssaint.utils vorssaint/com.vorssaint.utils.plist`
+# Imported only on a machine that has never run the app, so an existing setup is not overwritten.
+if [[ -e "$HOME/Library/Preferences/com.vorssaint.utils.plist" ]]; then
+  warn "Vorssaint already has preferences — skipping import"
+else
+  info "Importing Vorssaint settings..."
+  defaults import com.vorssaint.utils "$REPO_DIR/vorssaint/com.vorssaint.utils.plist"
+fi
+
 # ─── .gitconfig (via include, keeps user's name/email intact) ───────────────────
 GITCONFIG_PATH="$REPO_DIR/.gitconfig"
 if git config --global --get-all include.path 2>/dev/null | grep -qxF "$GITCONFIG_PATH"; then
