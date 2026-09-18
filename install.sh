@@ -33,8 +33,11 @@ fi
 info "Updating Homebrew..."
 brew update
 
-info "Installing packages from Brewfile..."
-brew bundle --no-upgrade
+# Upgrades too, but only what the Brewfile declares. A global `brew upgrade` would
+# also touch everything installed outside this repo (work JDKs, ffmpeg, ...).
+# Casks with auto_updates (Raycast, Ghostty, Karabiner, ...) are skipped.
+info "Installing/upgrading packages from Brewfile..."
+brew bundle
 
 # ─── Fonts ────────────────────────────────────────────────────────────────────
 info "Installing fonts..."
