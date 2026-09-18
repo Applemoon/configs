@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "lines": [
     [
       {
@@ -91,8 +91,8 @@
         "type": "git-branch",
         "color": "magenta",
         "metadata": {
-          "hideNoGit": "true",
-          "linkToRepo": "true"
+          "linkToRepo": "true",
+          "hide": "no-git"
         }
       },
       {
@@ -100,7 +100,7 @@
         "type": "git-status",
         "color": "yellow",
         "metadata": {
-          "hideNoGit": "true"
+          "hide": "no-git"
         }
       },
       {
@@ -108,7 +108,7 @@
         "type": "git-ahead-behind",
         "color": "cyan",
         "metadata": {
-          "hideNoGit": "true"
+          "hide": "no-git,no-upstream,zero"
         }
       },
       {
@@ -149,6 +149,6 @@
   },
   "installation": {
     "method": "pinned",
-    "installedVersion": "2.2.22"
+    "installedVersion": "2.2.29"
   }
 }
