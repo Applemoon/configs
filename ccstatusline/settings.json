@@ -6,10 +6,46 @@
         "id": "9ac15480-8f34-474b-ad76-b473b2e234c9",
         "type": "current-working-dir",
         "backgroundColor": "bgBrightMagenta",
+        "character": "📁",
+        "rawValue": true,
         "metadata": {
-          "fishStyle": "true"
+          "abbreviateHome": "true"
         }
       },
+      {
+        "id": "5",
+        "type": "git-branch",
+        "color": "magenta",
+        "metadata": {
+          "linkToRepo": "true",
+          "hide": "no-git"
+        }
+      },
+      {
+        "id": "c1a2b3d4-0002-4000-8000-000000000002",
+        "type": "git-status",
+        "color": "yellow",
+        "metadata": {
+          "hide": "no-git"
+        }
+      },
+      {
+        "id": "c1a2b3d4-0004-4000-8000-000000000004",
+        "type": "custom-command",
+        "backgroundColor": "bgBrightBlack",
+        "commandPath": "d=$(jq -r \".workspace.current_dir // .cwd\"); n=$(git -C \"$d\" status --porcelain 2>/dev/null | wc -l | tr -d \" \"); [ \"$n\" -gt 0 ] && echo \"📸 $n\" || true",
+        "timeout": 2000
+      },
+      {
+        "id": "c1a2b3d4-0003-4000-8000-000000000003",
+        "type": "git-ahead-behind",
+        "color": "cyan",
+        "metadata": {
+          "hide": "no-git,no-upstream,zero"
+        }
+      }
+    ],
+    [
       {
         "id": "1",
         "type": "model",
@@ -35,6 +71,15 @@
         "metadata": {
           "display": "slider"
         }
+      },
+      {
+        "id": "c1a2b3d4-0001-4000-8000-000000000001",
+        "type": "cache-timer",
+        "backgroundColor": "bgYellow",
+        "metadata": {
+          "ttlSeconds": "3600",
+          "hide": "empty"
+        }
       }
     ],
     [
@@ -52,8 +97,10 @@
         "id": "8690885d-1945-42e4-9cc5-53b68ae5a21b",
         "type": "reset-timer",
         "backgroundColor": "bgBrightGreen",
+        "rawValue": true,
         "metadata": {
-          "display": "time"
+          "display": "time",
+          "compact": "true"
         }
       },
       {
@@ -70,53 +117,12 @@
         "id": "79dd3b60-78ed-4c8b-98b0-a90480c3417a",
         "type": "weekly-reset-timer",
         "backgroundColor": "bgBrightMagenta",
+        "rawValue": true,
         "metadata": {
           "display": "time",
           "hours": "false",
-          "compact": "false"
+          "compact": "true"
         }
-      },
-      {
-        "id": "c1a2b3d4-0001-4000-8000-000000000001",
-        "type": "cache-timer",
-        "backgroundColor": "bgYellow",
-        "metadata": {
-          "ttlSeconds": "3600"
-        }
-      }
-    ],
-    [
-      {
-        "id": "5",
-        "type": "git-branch",
-        "color": "magenta",
-        "metadata": {
-          "linkToRepo": "true",
-          "hide": "no-git"
-        }
-      },
-      {
-        "id": "c1a2b3d4-0002-4000-8000-000000000002",
-        "type": "git-status",
-        "color": "yellow",
-        "metadata": {
-          "hide": "no-git"
-        }
-      },
-      {
-        "id": "c1a2b3d4-0003-4000-8000-000000000003",
-        "type": "git-ahead-behind",
-        "color": "cyan",
-        "metadata": {
-          "hide": "no-git,no-upstream,zero"
-        }
-      },
-      {
-        "id": "c1a2b3d4-0004-4000-8000-000000000004",
-        "type": "custom-command",
-        "backgroundColor": "bgBrightBlack",
-        "commandPath": "d=$(jq -r \".workspace.current_dir // .cwd\"); n=$(git -C \"$d\" status --porcelain 2>/dev/null | wc -l | tr -d \" \"); [ \"$n\" -gt 0 ] && echo \"📸 $n\" || true",
-        "timeout": 2000
       }
     ]
   ],
