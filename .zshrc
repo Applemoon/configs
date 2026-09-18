@@ -70,7 +70,7 @@ chpwd() {
     [[ -o interactive ]] || return
     local -a items=(*(N))  # подсчёт глоббингом: без форка ($(eza|wc) и был источником race)
 
-    if (( ${#items} <= 30 )); then
+    if (( ${#items} <= 40 )); then
         l
     else
         echo "${#items} files"
@@ -79,6 +79,11 @@ chpwd() {
 
 # ── PATH ──────────────────────────────────────────────────────────────────────
 export PATH="$HOME/.local/bin:$PATH"
+
+# Обёртки из claude-configs (~/.claude - его чекаут на рабочем GitLab): workon
+# и всё, что появится там дальше. Под гардом: на машине без этого репозитория
+# строка молча ничего не делает.
+[[ -d "$HOME/.claude/bin" ]] && export PATH="$HOME/.claude/bin:$PATH"
 
 # ── Local secrets (NOT tracked in git) ─────────────────────────────────────────
 # Tokens/keys live in ~/.zshrc.local, which is outside this repo so it never syncs.
