@@ -60,6 +60,16 @@ else
   warn "you-should-use is already installed — skipping"
 fi
 
+# ─── fzf-tab plugin (fzf menu instead of zsh tab cycling) ─────────────────────
+FZF_TAB_DIR="$ZSH_CUSTOM/plugins/fzf-tab"
+
+if [[ ! -d "$FZF_TAB_DIR" ]]; then
+  info "Cloning fzf-tab plugin..."
+  git clone --depth 1 https://github.com/Aloxaf/fzf-tab.git "$FZF_TAB_DIR"
+else
+  warn "fzf-tab is already installed — skipping"
+fi
+
 # ─── Git submodules (vim plugins) ──────────────────────────────────────────────
 # Must run before linking ~/.vim so .vim/bundle/* are populated.
 info "Updating submodules..."
