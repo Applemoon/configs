@@ -20,9 +20,19 @@ ZSH_THEME="robbyrussell"
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
-plugins=(git you-should-use macos z history eza command-not-found extract)
+# fzf-tab goes last: it must load after compinit and before the widget-wrapping
+# plugins (autosuggestions, syntax-highlighting), which are sourced further down.
+plugins=(git you-should-use macos z history eza command-not-found extract fzf-tab)
 
 source $ZSH/oh-my-zsh.sh
+
+# ── fzf ───────────────────────────────────────────────────────────────────────
+# Ctrl-R fuzzy history, Ctrl-T fuzzy file path into the command line,
+# Alt-C fuzzy cd. Without this line fzf is only a binary.
+source <(fzf --zsh)
+# fzf-tab: while picking a directory after `cd`, show its contents on the right —
+# the same instinct as the chpwd hook below, one step earlier.
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=always $realpath'
 
 # ── User configuration ────────────────────────────────────────────────────────
 
