@@ -33,6 +33,11 @@ source <(fzf --zsh)
 # fzf-tab: while picking a directory after `cd`, show its contents on the right —
 # the same instinct as the chpwd hook below, one step earlier.
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=always $realpath'
+# macOS /usr/bin/sort under en_US.UTF-8 collates distinct Cyrillic strings as
+# equal, so fzf-tab's `sort -u` dedup silently dropped vault folders
+# (Инбоксик, Журналы, Архив) from `cd <Tab>`. Byte-order collation fixes sort,
+# uniq and comm for Cyrillic everywhere; eza and Obsidian sort on their own.
+export LC_COLLATE=C
 
 # ── User configuration ────────────────────────────────────────────────────────
 
