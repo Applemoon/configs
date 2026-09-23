@@ -16,7 +16,7 @@ bash install.sh          # idempotent; re-run anytime
 
 `install.sh` is the heart of the repo and the only executable, run under `set -euo pipefail`. It is **idempotent** — every step guards against re-running. When adding a config, follow the existing pattern: add a `link "<repo-file>" "<dest>"` call. The `link()` helper backs up any existing real file to `*.backup` once, then symlinks; re-running is a no-op when the link is already correct.
 
-What it does, in order: bootstraps Homebrew → `brew bundle` from `Brewfile` → copies fonts → installs Oh My Zsh (`KEEP_ZSHRC=yes`) + the `you-should-use` plugin → updates git submodules → **symlinks** `.zshrc`, `.p10k.zsh`, `.vimrc`, `.vim`, `nvim`, `karabiner.json`, `ghostty/config`, `ghostty/shaders` into place → registers `.gitconfig` via `git config --global --add include.path` → applies `defaults write` macOS tweaks.
+What it does, in order: bootstraps Homebrew → `brew bundle` from `Brewfile` → copies fonts → installs Oh My Zsh (`KEEP_ZSHRC=yes`) + the `you-should-use` plugin → updates git submodules → **symlinks** `.zshrc`, `.p10k.zsh`, `.vimrc`, `.vim`, `nvim`, `karabiner.json`, `ghostty/config`, `ghostty/shaders`, `bin/ascii-cols` into place → registers `.gitconfig` via `git config --global --add include.path` → applies `defaults write` macOS tweaks.
 
 When run via `curl` (no `.vimrc` in cwd), it first clones the repo with `--recurse-submodules` and re-execs itself. `REPO_DIR` is resolved as the script's own dir so symlinks point at absolute repo paths.
 
@@ -29,6 +29,7 @@ When run via `curl` (no `.vimrc` in cwd), it first clones the repo with `--recur
 - **`.gitconfig`** is a *fragment* pulled in via `include.path` in `~/.gitconfig` — this keeps the user's `user.name`/`email` out of the repo while versioning shared settings.
 - **`karabiner.json`** — full Karabiner profile. Rules: `fn+hjkl`→arrows, right cmd→backspace, Hyper (⌘⌃⌥⇧) `+a/+s/+d` → input source Russian/English/Serbian.
 - **`ghostty/`** (→ `~/.config/ghostty/`): `ghostty/config` is the terminal config (symlinked to `~/.config/ghostty/config`). `ghostty/shaders` is a **git submodule** ([sahaj-b/ghostty-cursor-shaders](https://github.com/sahaj-b/ghostty-cursor-shaders)) symlinked to `~/.config/ghostty/shaders` — don't hand-edit it, it's an upstream checkout.
+- **`bin/`** (→ `~/.local/bin/`): personal CLI helpers, one symlink per file. `ascii-cols` aligns tab-separated columns of pseudographics (boxes, arrows) so vertical lines never drift. Never put a wrapper with a baked-in secret here (e.g. `psql-ro`) — this repo is public on GitHub.
 - **Fonts** — `MesloLGS NF` (`fonts/*.ttf`), required by Powerlevel10k; **copied** into `~/Library/Fonts/` (not symlinked).
 
 ## Gotchas

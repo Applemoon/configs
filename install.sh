@@ -110,6 +110,7 @@ link "karabiner.json" "$HOME/.config/karabiner/karabiner.json"
 link "ghostty/config"  "$HOME/.config/ghostty/config"
 link "ghostty/shaders" "$HOME/.config/ghostty/shaders"
 link "ccstatusline/settings.json" "$HOME/.config/ccstatusline/settings.json"
+link "bin/ascii-cols"  "$HOME/.local/bin/ascii-cols"
 
 # ─── ccstatusline (Claude Code status line, npm-only) ─────────────────────────
 if command -v ccstatusline &>/dev/null; then
