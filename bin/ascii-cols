@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+"""Align tab-separated columns of pseudographics so vertical lines never drift.
+
+Input (stdin or file): text where the columns of one row are separated by a TAB.
+Every column is padded to its widest cell, columns are joined with GAP spaces.
+
+  --gap N      spaces between columns (default 2)
+  --at 0,34,40 absolute start column of each column instead of a gap; use the same
+               positions for every block (header, boxes, arrows) of one drawing
+  --box        wrap every column into a ┌─┐│└─┘ frame (all rows equal width)
+  --box 1,3    wrap only the listed columns (1-based)
+
+Example:
+  printf '▲\\t▲\\n│ writes\\t│ reads\\n' | ascii-cols --gap 20
+"""
+import argparse
+import sys
+
+
+def parse_box(value):
+    if value is None:
+        return set()
+    if value == "":
+        return {"all"}
+    return {int(x) for x in value.split(",") if x.strip()}
+
+
+def frame(cells, width):
+    inner = width + 2
+    top = "┌" + "─" * inner + "┐"
+    bottom = "└" + "─" * inner + "┘"
+    body = ["│ " + cell.ljust(width) + " │" for cell in cells]
+    return [top, *body, bottom]
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("file", nargs="?", help="input file (default: stdin)")
+    ap.add_argument("--gap", type=int, default=2, help="spaces between columns (default 2)")
+    ap.add_argument("--box", nargs="?", const="", default=None, help="frame all columns, or the listed ones (1-based)")
+    ap.add_argument("--at", default=None, help="absolute start column of each column, e.g. 0,34,40 (overrides --gap)")
+    args = ap.parse_args()
+
+    text = open(args.file, encoding="utf-8").read() if args.file else sys.stdin.read()
+    rows = [line.rstrip("\n").split("\t") for line in text.splitlines()]
+    if not rows:
+        return
+
+    ncols = max(len(r) for r in rows)
+    rows = [r + [""] * (ncols - len(r)) for r in rows]
+    widths = [max(len(r[i]) for r in rows) for i in range(ncols)]
+
+    boxed = parse_box(args.box)
+    is_boxed = ["all" in boxed or (i + 1) in boxed for i in range(ncols)]
+    columns = []
+    for i in range(ncols):
+        cells = [r[i] for r in rows]
+        if is_boxed[i]:
+            columns.append(frame(cells, widths[i]))
+        else:
+            padded = [c.ljust(widths[i]) for c in cells]
+            if any(is_boxed):
+                # keep the rows of a plain column level with the framed rows, not with the top border
+                padded.insert(0, " " * widths[i])
+            columns.append(padded)
+
+    height = max(len(c) for c in columns)
+    for i, col in enumerate(columns):
+        col.extend([" " * len(col[0])] * (height - len(col)))
+
+    if args.at:
+        # absolute start columns: every block of one drawing shares the same coordinates
+        starts = [int(x) for x in args.at.split(",")]
+        if len(starts) != ncols:
+            sys.exit(f"--at lists {len(starts)} positions, input has {ncols} columns")
+        for i, col in enumerate(columns):
+            slot = (starts[i + 1] - starts[i]) if i + 1 < ncols else len(col[0])
+            if slot < len(col[0]):
+                sys.exit(f"column {i + 1} is {len(col[0])} wide, slot from --at is {slot}")
+            columns[i] = [line.ljust(slot) for line in col]
+        columns[0] = [" " * starts[0] + line for line in columns[0]]
+        gap = ""
+    else:
+        gap = " " * args.gap
+
+    for line_cells in zip(*columns):
+        print(gap.join(line_cells).rstrip())
+
+
+if __name__ == "__main__":
+    main()
