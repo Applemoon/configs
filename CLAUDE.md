@@ -16,7 +16,7 @@ bash install.sh          # idempotent; re-run anytime
 
 `install.sh` is the heart of the repo and the only executable, run under `set -euo pipefail`. It is **idempotent** — every step guards against re-running. When adding a config, follow the existing pattern: add a `link "<repo-file>" "<dest>"` call. The `link()` helper backs up any existing real file to `*.backup` once, then symlinks; re-running is a no-op when the link is already correct.
 
-What it does, in order: bootstraps Homebrew → `brew bundle` from `Brewfile` → copies fonts → installs Oh My Zsh (`KEEP_ZSHRC=yes`) + the `you-should-use` plugin → updates git submodules → **symlinks** `.zshrc`, `.p10k.zsh`, `.vimrc`, `.vim`, `nvim`, `karabiner.json`, `ghostty/config`, `ghostty/shaders`, `bin/ascii-cols` into place → registers `.gitconfig` via `git config --global --add include.path` → applies `defaults write` macOS tweaks.
+What it does, in order: bootstraps Homebrew → `brew bundle` from `Brewfile` (installs and upgrades only what it declares) → copies fonts → installs Oh My Zsh (`KEEP_ZSHRC=yes`) + the `you-should-use` and `fzf-tab` plugins → updates git submodules → **symlinks** `.zshrc`, `.p10k.zsh`, `.vimrc`, `.vim`, `nvim`, `karabiner.json`, `ghostty/config`, `ghostty/shaders`, `ccstatusline/settings.json`, `bin/ascii-cols` into place → `npm install -g ccstatusline` → imports Vorssaint settings (first run only) → registers `.gitconfig` via `git config --global --add include.path` → applies `defaults write` macOS tweaks.
 
 When run via `curl` (no `.vimrc` in cwd), it first clones the repo with `--recurse-submodules` and re-execs itself. `REPO_DIR` is resolved as the script's own dir so symlinks point at absolute repo paths.
 
@@ -27,9 +27,12 @@ When run via `curl` (no `.vimrc` in cwd), it first clones the repo with `--recur
   - **nvim** (`nvim/` → `~/.config/nvim`): **LazyVim** starter. Plugins are managed by `lazy.nvim`, **not** submodules — pinned in `nvim/lazy-lock.json` (commit it for reproducibility). Never add nvim plugins as submodules. Primary editor (`EDITOR=nvim`).
 - **`.zshrc`** is repo-owned and symlinked. Oh My Zsh + Powerlevel10k (the theme comes from Homebrew, not OMZ themes). Brew-prefix-dependent `source` lines probe `/opt/homebrew` then `/usr/local` so the file is portable across Apple Silicon / Intel / Rosetta. The p10k prompt config (`.p10k.zsh` → `~/.p10k.zsh`) is also repo-owned and symlinked, so the prompt is reproducible on a fresh machine.
 - **`.gitconfig`** is a *fragment* pulled in via `include.path` in `~/.gitconfig` — this keeps the user's `user.name`/`email` out of the repo while versioning shared settings.
-- **`karabiner.json`** — full Karabiner profile. Rules: `fn+hjkl`→arrows, right cmd→backspace, Hyper (⌘⌃⌥⇧) `+a/+s/+d` → input source Russian/English/Serbian.
+- **`karabiner.json`** — full Karabiner profile. Rules: Caps Lock → Hyper (⌘⌃⌥⇧), Hyper `+a/+s/+d` → input source Russian / English / toggle Serbian Cyrillic↔Latin, right cmd → backspace.
 - **`ghostty/`** (→ `~/.config/ghostty/`): `ghostty/config` is the terminal config (symlinked to `~/.config/ghostty/config`). `ghostty/shaders` is a **git submodule** ([sahaj-b/ghostty-cursor-shaders](https://github.com/sahaj-b/ghostty-cursor-shaders)) symlinked to `~/.config/ghostty/shaders` — don't hand-edit it, it's an upstream checkout.
 - **`bin/`** (→ `~/.local/bin/`): personal CLI helpers, one symlink per file. `ascii-cols` aligns tab-separated columns of pseudographics (boxes, arrows) so vertical lines never drift. Never put a wrapper with a baked-in secret here (e.g. `psql-ro`) — this repo is public on GitHub.
+- **`ccstatusline/settings.json`** (→ `~/.config/ccstatusline/`) — Claude Code status line config. The tool itself is npm-only (`npm install -g` in `install.sh`), not in the `Brewfile`.
+- **`vorssaint/com.vorssaint.utils.plist`** — Vorssaint (menu bar toolkit) keeps its settings in UserDefaults, so this is a **snapshot, not a link**: refresh it with `defaults export com.vorssaint.utils vorssaint/com.vorssaint.utils.plist`. `install.sh` imports it only when the machine has no Vorssaint prefs yet, so an existing setup is never overwritten.
+- **`silakka54*.vil`** — Vial layouts for the Silakka54 keyboard, versions kept side by side (`silakka54-vN.vil`). Not touched by `install.sh`.
 - **Fonts** — `MesloLGS NF` (`fonts/*.ttf`), required by Powerlevel10k; **copied** into `~/Library/Fonts/` (not symlinked).
 
 ## Gotchas
