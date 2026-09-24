@@ -1,0 +1,4 @@
+# Базовый конфиг markdownlint-cli2 для nvim-lint (подключается в lua/plugins/markdownlint.lua).
+# Длинные строки в markdown визуально переносятся (wrap + linebreak в config/autocmds.lua),
+# поэтому лимит длины строки не нужен.
+MD013: false
