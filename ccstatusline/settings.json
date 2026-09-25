@@ -77,7 +77,6 @@
         "type": "cache-timer",
         "backgroundColor": "bgYellow",
         "metadata": {
-          "ttlSeconds": "3600",
           "hide": "empty"
         }
       }
@@ -99,8 +98,8 @@
         "backgroundColor": "bgBrightGreen",
         "rawValue": true,
         "metadata": {
-          "display": "time",
-          "compact": "true"
+          "display": "slider-only",
+          "invert": "true"
         }
       },
       {
@@ -119,9 +118,8 @@
         "backgroundColor": "bgBrightMagenta",
         "rawValue": true,
         "metadata": {
-          "display": "time",
-          "hours": "false",
-          "compact": "true"
+          "display": "slider-only",
+          "invert": "true"
         }
       }
     ]
@@ -138,7 +136,7 @@
   "powerline": {
     "enabled": true,
     "separators": [
-      ""
+      ""
     ],
     "separatorInvertBackground": [
       false
