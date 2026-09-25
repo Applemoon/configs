@@ -98,7 +98,7 @@
         "backgroundColor": "bgBrightGreen",
         "rawValue": true,
         "metadata": {
-          "display": "slider-only",
+          "display": "slider",
           "invert": "true"
         }
       },
@@ -118,7 +118,7 @@
         "backgroundColor": "bgBrightMagenta",
         "rawValue": true,
         "metadata": {
-          "display": "slider-only",
+          "display": "slider",
           "invert": "true"
         }
       }
