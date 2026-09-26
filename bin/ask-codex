@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Delegate a public web-research question to Codex CLI (ChatGPT Free plan) and print
+# only its final answer. The search and page reading happen on OpenAI's side, so the
+# caller's context gets a few lines instead of raw search results.
+#
+#   ask-codex "Часы работы музея Теслы и цена билета, со ссылкой на источник"
+#
+# Runs in an empty temp dir with a read-only sandbox: Codex sees no local files.
+# Free-plan content may be used for training — public questions only.
+# Models: gpt-5.5 (config default) is refused on Free; the first model that answers wins.
+
+set -u
+CODEX=/Applications/Codex.app/Contents/Resources/codex
+MODELS=(gpt-5.6-luna gpt-5.6-terra)
+
+[ $# -eq 0 ] && { echo "usage: ask-codex \"question\"" >&2; exit 2; }
+
+work=$(mktemp -d -t ask-codex)
+trap 'rm -rf "$work"' EXIT
+cd "$work" || exit 1
+
+for m in "${MODELS[@]}"; do
+  if "$CODEX" exec --skip-git-repo-check -s read-only -m "$m" -c web_search='"live"' \
+       -o answer.txt "$*" >log.txt 2>&1 && [ -s answer.txt ]; then
+    cat answer.txt
+    exit 0
+  fi
+  echo "ask-codex: $m failed: $(grep ERROR log.txt | tail -1)" >&2
+done
+exit 1
