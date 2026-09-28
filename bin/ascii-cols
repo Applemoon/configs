@@ -22,10 +22,10 @@ def dwidth(s):
     """Display width in terminal cells: emoji and CJK take 2, joiners and marks 0."""
     w, prev, after_zwj = 0, 0, False
     for ch in s:
-        if ch == "‍":
+        if ch == "\u200d":
             after_zwj = True
             continue
-        if ch == "️":
+        if ch == "\ufe0f":
             # emoji presentation widens a narrow base (⚠️, 1️⃣)
             w += 1 if prev == 1 else 0
             prev = 2
