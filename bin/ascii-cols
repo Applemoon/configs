@@ -15,6 +15,34 @@ Example:
 """
 import argparse
 import sys
+import unicodedata
+
+
+def dwidth(s):
+    """Display width in terminal cells: emoji and CJK take 2, joiners and marks 0."""
+    w, prev, after_zwj = 0, 0, False
+    for ch in s:
+        if ch == "‍":
+            after_zwj = True
+            continue
+        if ch == "️":
+            # emoji presentation widens a narrow base (⚠️, 1️⃣)
+            w += 1 if prev == 1 else 0
+            prev = 2
+            continue
+        if unicodedata.category(ch) in ("Mn", "Me", "Cf"):
+            continue
+        cw = 2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1
+        if after_zwj:
+            after_zwj = False
+            continue
+        w += cw
+        prev = cw
+    return w
+
+
+def pad(s, width):
+    return s + " " * (width - dwidth(s))
 
 
 def parse_box(value):
@@ -29,7 +57,7 @@ def frame(cells, width):
     inner = width + 2
     top = "┌" + "─" * inner + "┐"
     bottom = "└" + "─" * inner + "┘"
-    body = ["│ " + cell.ljust(width) + " │" for cell in cells]
+    body = ["│ " + pad(cell, width) + " │" for cell in cells]
     return [top, *body, bottom]
 
 
@@ -48,7 +76,7 @@ def main():
 
     ncols = max(len(r) for r in rows)
     rows = [r + [""] * (ncols - len(r)) for r in rows]
-    widths = [max(len(r[i]) for r in rows) for i in range(ncols)]
+    widths = [max(dwidth(r[i]) for r in rows) for i in range(ncols)]
 
     boxed = parse_box(args.box)
     is_boxed = ["all" in boxed or (i + 1) in boxed for i in range(ncols)]
@@ -58,7 +86,7 @@ def main():
         if is_boxed[i]:
             columns.append(frame(cells, widths[i]))
         else:
-            padded = [c.ljust(widths[i]) for c in cells]
+            padded = [pad(c, widths[i]) for c in cells]
             if any(is_boxed):
                 # keep the rows of a plain column level with the framed rows, not with the top border
                 padded.insert(0, " " * widths[i])
@@ -66,7 +94,7 @@ def main():
 
     height = max(len(c) for c in columns)
     for i, col in enumerate(columns):
-        col.extend([" " * len(col[0])] * (height - len(col)))
+        col.extend([" " * dwidth(col[0])] * (height - len(col)))
 
     if args.at:
         # absolute start columns: every block of one drawing shares the same coordinates
@@ -74,10 +102,10 @@ def main():
         if len(starts) != ncols:
             sys.exit(f"--at lists {len(starts)} positions, input has {ncols} columns")
         for i, col in enumerate(columns):
-            slot = (starts[i + 1] - starts[i]) if i + 1 < ncols else len(col[0])
-            if slot < len(col[0]):
-                sys.exit(f"column {i + 1} is {len(col[0])} wide, slot from --at is {slot}")
-            columns[i] = [line.ljust(slot) for line in col]
+            slot = (starts[i + 1] - starts[i]) if i + 1 < ncols else dwidth(col[0])
+            if slot < dwidth(col[0]):
+                sys.exit(f"column {i + 1} is {dwidth(col[0])} wide, slot from --at is {slot}")
+            columns[i] = [pad(line, slot) for line in col]
         columns[0] = [" " * starts[0] + line for line in columns[0]]
         gap = ""
     else:
