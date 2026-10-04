@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Delegate a public web-research question to Codex CLI (ChatGPT Free plan) and print
-# only its final answer. The search and page reading happen on OpenAI's side, so the
-# caller's context gets a few lines instead of raw search results.
+# Delegate a public web-research question to Codex CLI (ChatGPT Free plan), print its
+# final answer, then check the answer's sources. The search and page reading happen on
+# OpenAI's side; the source check runs locally, so the caller re-checks only flagged lines.
 #
 #   ask-codex "Часы работы музея Теслы и цена билета, со ссылкой на источник"
 #
@@ -12,6 +12,8 @@
 set -u
 CODEX=/Applications/Codex.app/Contents/Resources/codex
 MODELS=(gpt-5.6-luna gpt-5.6-terra)
+# The source check works line by line, so a figure needs its link on the same line.
+FORMAT='Format: put the source link on the same line as every figure it supports. Mark anything you could not source as unconfirmed.'
 
 [ $# -eq 0 ] && { echo "usage: ask-codex \"question\"" >&2; exit 2; }
 
@@ -19,10 +21,123 @@ work=$(mktemp -d -t ask-codex)
 trap 'rm -rf "$work"' EXIT
 cd "$work" || exit 1
 
+# Open every cited URL and look for the line's figures on the page. Prints a one-line
+# summary plus only the lines that need a human look: ❓ figure not on the page / no
+# source / site blocked the script, ⚠️ dead link. ✅ lines are counted, not listed.
+check_sources() {
+  python3 - "$1" <<'PY'
+import concurrent.futures as cf, html, os, re, subprocess, sys, tempfile
+
+UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 "
+      "(KHTML, like Gecko) Version/18.0 Safari/605.1.15")
+URL = re.compile(r'https?://[^\s<>()\[\]"«»]+')
+# 50,700 · 45 934,20 · 1.685.563 · 43.1 — a 3-digit group must not run into more digits,
+# otherwise "2024 2025" would glue into one number.
+NUM = re.compile(r'\d+(?:[   .,]\d{3}(?!\d))*(?:[.,]\d+)?')
+
+
+def digits(s):
+    """Digits only, separators dropped; a decimal tail loses trailing zeros (43.10 == 43,1)."""
+    dec = re.search(r'[.,](\d{1,2})$', s)  # 1–2 digits after the last mark: decimals, not thousands
+    if dec:
+        return re.sub(r'\D', '', s[:dec.start()]) + dec.group(1).rstrip('0')
+    return re.sub(r'\D', '', s)
+
+
+def figures(line):
+    """Figures worth checking: no list markers, no URLs, no bare years, no single digits."""
+    line = re.sub(r'^\s*(?:[-*•]|\d+[.)])\s+', '', line)
+    line = re.sub(r'\]\([^)]*\)', ']', URL.sub(' ', line))
+    line = re.sub(r'\d{1,2}\.\d{1,2}\.\d{2,4}|\d{4}-\d{2}-\d{2}', ' ', line)  # dates
+    out = []
+    for m in NUM.finditer(line):
+        d = digits(m.group())
+        if len(d) < 2 or (len(d) == 4 and 1900 <= int(d) <= 2099):
+            continue
+        out.append(m.group())
+    return out
+
+
+def fetch(url):
+    try:
+        p = subprocess.run(["curl", "-sL", "--compressed", "-m", "20", "-A", UA, "-o", "-",
+                            "-w", "\n%{http_code} %{content_type}", url],
+                           capture_output=True, timeout=30)
+    except subprocess.TimeoutExpired:
+        return "000", ""
+    body, _, meta = p.stdout.rpartition(b"\n")
+    code, _, ctype = meta.decode(errors="replace").partition(" ")
+    if "pdf" in ctype or body[:5] == b"%PDF-":
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as f:
+            f.write(body)
+        try:
+            text = subprocess.run(["pdftotext", "-q", f.name, "-"], capture_output=True,
+                                  timeout=30).stdout.decode(errors="replace")
+        except (OSError, subprocess.TimeoutExpired):
+            text = ""
+        os.unlink(f.name)
+        return code, text
+    text = body.decode("utf-8", errors="replace")
+    text = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", text)
+    return code, html.unescape(re.sub(r"<[^>]+>", " ", text))
+
+
+def page_figures(text):
+    return {digits(m.group()) for m in NUM.finditer(text)} | set(re.findall(r'\d+', text))
+
+
+def snippet(line):
+    s = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', line)
+    s = re.sub(r'[*_`]', '', URL.sub('', s)).strip(" -•\t")
+    return s[:70] + ("…" if len(s) > 70 else "")
+
+
+lines = [l for l in open(sys.argv[1], encoding="utf-8").read().splitlines() if l.strip()]
+urls = sorted({u.rstrip('.,;:') for l in lines for u in URL.findall(l)})
+with cf.ThreadPoolExecutor(8) as ex:
+    pages = dict(zip(urls, ex.map(fetch, urls)))
+# A bot check or a JS shell also answers 200, with almost no text ("Verifying your browser").
+readable = {u for u, (c, t) in pages.items()
+            if c.startswith("2") and len(re.sub(r'\s+', ' ', t)) >= 800}
+figs = {u: page_figures(pages[u][1]) for u in readable}
+
+ok, flagged = 0, []
+for line in lines:
+    line_urls = [u.rstrip('.,;:') for u in URL.findall(line)]
+    nums = figures(line)
+    if not line_urls:
+        if nums:
+            flagged.append(f"❓ no source   {snippet(line)}")
+        continue
+    live = [u for u in line_urls if u in figs]
+    dead = [u for u in line_urls if pages[u][0] in ("404", "410")]
+    if not live:
+        code = pages[line_urls[0]][0]
+        why = ("dead link" if dead else "no response" if code == "000"
+               else "page unreadable (bot check / JS)" if code.startswith("2")
+               else "site blocked the script")
+        mark = "⚠️" if dead else "❓"
+        flagged.append(f"{mark} {code} {why}   {snippet(line)}")
+        continue
+    seen = set().union(*(figs[u] for u in live))
+    missing = [n for n in nums if digits(n) not in seen]
+    if missing:
+        flagged.append(f"❓ 200 not on page: {', '.join(missing)}   {snippet(line)}")
+    elif dead:
+        flagged.append(f"⚠️ one of the links is dead   {snippet(line)}")
+    else:
+        ok += 1
+
+print(f"\n── sources: {ok} ✅ checked, {len(flagged)} to look at ──")
+print("\n".join(flagged))
+PY
+}
+
 for m in "${MODELS[@]}"; do
   if "$CODEX" exec --skip-git-repo-check -s read-only -m "$m" -c web_search='"live"' \
-       -o answer.txt "$*" >log.txt 2>&1 && [ -s answer.txt ]; then
+       -o answer.txt "$*"$'\n\n'"$FORMAT" >log.txt 2>&1 && [ -s answer.txt ]; then
     cat answer.txt
+    check_sources answer.txt || echo "ask-codex: source check failed" >&2
     exit 0
   fi
   echo "ask-codex: $m failed: $(grep ERROR log.txt | tail -1)" >&2
