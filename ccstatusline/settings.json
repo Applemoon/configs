@@ -77,7 +77,8 @@
         "type": "cache-timer",
         "backgroundColor": "bgYellow",
         "metadata": {
-          "hide": "empty"
+          "hide": "empty",
+          "ttlSeconds": "3600"
         }
       }
     ],
