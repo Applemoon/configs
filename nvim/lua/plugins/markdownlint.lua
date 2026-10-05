@@ -1,12 +1,10 @@
--- markdownlint-cli2 не ищет конфиг в ~ (только cwd и ниже), поэтому глобальный
--- базовый конфиг передаётся через --config. Конфиг проекта, если есть, ложится поверх.
+-- markdownlint-cli2 из extra lang.markdown выключен: его диагностика (MD029 и прочие)
+-- в личных заметках и командных доках только шумит. Без его диагностики не срабатывает
+-- и одноимённый форматтер conform (у него condition на source == "markdownlint").
 return {
   "mfussenegger/nvim-lint",
-  opts = {
-    linters = {
-      ["markdownlint-cli2"] = {
-        prepend_args = { "--config", vim.fn.stdpath("config") .. "/.markdownlint.yaml" },
-      },
-    },
-  },
+  opts = function(_, opts)
+    opts.linters_by_ft = opts.linters_by_ft or {}
+    opts.linters_by_ft.markdown = {}
+  end,
 }
