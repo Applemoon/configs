@@ -26,6 +26,10 @@ plugins=(git you-should-use macos z history eza command-not-found extract fzf-ta
 
 source $ZSH/oh-my-zsh.sh
 
+# Claude Code's shell keeps the plain ls: under the eza plugin's alias coreutils flags mean other
+# things and fail silently (`ls -t <dir>` is eza's --time, swallows the path and prints nothing).
+[[ -z $CLAUDECODE ]] || unalias ls 2>/dev/null
+
 # ── fzf ───────────────────────────────────────────────────────────────────────
 # Ctrl-R fuzzy history, Ctrl-T fuzzy file path into the command line,
 # Alt-C fuzzy cd. Without this line fzf is only a binary.
