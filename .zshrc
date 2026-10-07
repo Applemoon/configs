@@ -46,7 +46,7 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 
 alias v=nvim
-alias cl=claude
+alias cc=claude
 
 # Clickable terminal links (e.g. file paths in Claude Code)
 export FORCE_HYPERLINK=1
