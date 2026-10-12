@@ -33,7 +33,7 @@
         "id": "c1a2b3d4-0004-4000-8000-000000000004",
         "type": "custom-command",
         "backgroundColor": "bgBrightBlack",
-        "commandPath": "d=$(jq -r \".workspace.current_dir // .cwd\"); n=$(git -C \"$d\" status --porcelain 2>/dev/null | wc -l | tr -d \" \"); [ \"$n\" -gt 0 ] && echo \"📸 $n\" || true",
+        "commandPath": "d=$(jq -r \".workspace.current_dir // .cwd\"); n=$(git --no-optional-locks -C \"$d\" status --porcelain 2>/dev/null | wc -l | tr -d \" \"); [ \"$n\" -gt 0 ] && echo \"📸 $n\" || true",
         "timeout": 2000
       },
       {
