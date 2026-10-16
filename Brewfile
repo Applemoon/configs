@@ -17,6 +17,8 @@ brew "powerlevel10k"
 brew "python@3.14"
 # for npm -g ccstatusline (Claude Code status line)
 brew "node"
+# pdftotext for bin/ask-codex's source check of PDF pages
+brew "poppler"
 
 cask "karabiner-elements"
 cask "homerow"
