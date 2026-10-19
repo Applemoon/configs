@@ -73,6 +73,16 @@
         }
       },
       {
+        "id": "e5736e97-c947-4d80-b7ae-077268a45234",
+        "type": "compaction-counter",
+        "backgroundColor": "bgBlue",
+        "metadata": {
+          "nerdFont": "true",
+          "showTriggers": "false",
+          "showReclaimed": "false"
+        }
+      },
+      {
         "id": "c1a2b3d4-0001-4000-8000-000000000001",
         "type": "cache-timer",
         "backgroundColor": "bgYellow",
