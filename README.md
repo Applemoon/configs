@@ -13,6 +13,7 @@ macOS config files for zsh, nvim, vim, git, Ghostty and Karabiner, plus the Home
 - **Karabiner-Elements** — Caps Lock → Hyper (⌘⌃⌥⇧), Hyper+a/s/d → Russian / English / Serbian Cyrillic↔Latin, right cmd → backspace
 - **Claude Code status line** — ccstatusline config (the tool itself comes from npm)
 - **CLI helpers** — `ascii-cols`, `ask-codex` in `~/.local/bin`
+- **Finder Quick Action** — right-click a folder → Open Claude Code in Ghostty (a new tab in the front window)
 - **Vorssaint** — menu bar toolkit settings, imported only where the app has no settings yet
 - **macOS defaults** — file extensions and Finder path bar shown, Dock on the left without recent apps
 - **Fonts** — MesloLGS NF (required for Powerlevel10k)

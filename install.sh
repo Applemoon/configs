@@ -112,6 +112,7 @@ link "ghostty/shaders" "$HOME/.config/ghostty/shaders"
 link "ccstatusline/settings.json" "$HOME/.config/ccstatusline/settings.json"
 link "bin/ascii-cols"  "$HOME/.local/bin/ascii-cols"
 link "bin/ask-codex"   "$HOME/.local/bin/ask-codex"
+link "services/Open Claude Code in Ghostty.workflow" "$HOME/Library/Services/Open Claude Code in Ghostty.workflow"
 
 # ─── ccstatusline (Claude Code status line, npm-only) ─────────────────────────
 if command -v ccstatusline &>/dev/null; then
