@@ -1,5 +1,5 @@
 # ─── Внешний вид ───────────────────────────────────────────────────────────
-background-opacity = 0.98
+background-opacity = 1
 background-blur = 255
 font-size = 14
 theme = Gruvbox Dark Hard
@@ -20,7 +20,8 @@ macos-icon-screen-color = #1d2021,#3c3836
 # Привязка по физической позиции клавиши (W3C key_*) → отправка нужного
 # управляющего байта. Чинит Ctrl+V (вставка картинок в Claude Code) и прочие
 # Ctrl-шорткаты на кириллической раскладке. На английской раскладке поведение
-# идентично нативному. Пропущены h/i/j/m (Backspace/Tab/LF/Enter).
+# идентично нативному. Пропущены i/m: там, где Ctrl+i/Ctrl+m отличают от
+# Tab/Enter, они бы слились. h и j безопасны: Backspace шлёт 0x7f, а не 0x08.
 keybind = ctrl+key_a=text:\x01
 keybind = ctrl+key_b=text:\x02
 keybind = ctrl+key_c=text:\x03
@@ -28,6 +29,8 @@ keybind = ctrl+key_d=text:\x04
 keybind = ctrl+key_e=text:\x05
 keybind = ctrl+key_f=text:\x06
 keybind = ctrl+key_g=text:\x07
+keybind = ctrl+key_h=text:\x08
+keybind = ctrl+key_j=text:\x0a
 keybind = ctrl+key_k=text:\x0b
 keybind = ctrl+key_l=text:\x0c
 keybind = ctrl+key_n=text:\x0e
