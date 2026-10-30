@@ -115,12 +115,10 @@ link "bin/ask-codex"   "$HOME/.local/bin/ask-codex"
 link "services/Open Claude Code in Ghostty.workflow" "$HOME/Library/Services/Open Claude Code in Ghostty.workflow"
 
 # ─── ccstatusline (Claude Code status line, npm-only) ─────────────────────────
-if command -v ccstatusline &>/dev/null; then
-  warn "ccstatusline is already installed — skipping"
-else
-  info "Installing ccstatusline..."
-  npm install -g ccstatusline
-fi
+# Newest release at least 14 days old: it reads the Claude token from the keychain,
+# so a hijacked release has time to be pulled before it lands here.
+info "Installing/updating ccstatusline..."
+npm install -g ccstatusline --before="$(date -v-14d +%Y-%m-%d)"
 
 # ─── Vorssaint (menu bar toolkit) — settings live in UserDefaults, not a file ──
 # Snapshot in the repo: `defaults export com.vorssaint.utils vorssaint/com.vorssaint.utils.plist`
