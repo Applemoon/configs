@@ -52,12 +52,13 @@
         "color": "cyan"
       },
       {
-        "id": "0c8f4286-fabe-4a6b-a85f-4172089df9e2",
-        "type": "custom-command",
-        "backgroundColor": "bgBrightGreen",
-        "commandPath": "jq -r '.output_style.name // \"default\" | select(. != \"default\") | \"Style: \" + .'",
-        "timeout": 1000,
-        "merge": true
+        "id": "48d0e992-23ac-4caf-a6a2-076ead81093e",
+        "type": "output-style",
+        "backgroundColor": "bgMagenta",
+        "merge": true,
+        "metadata": {
+          "hide": "default-value"
+        }
       },
       {
         "id": "32956e89-4d74-44da-86ea-1170dec0665d",
