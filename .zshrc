@@ -34,6 +34,9 @@ source $ZSH/oh-my-zsh.sh
 # Ctrl-R fuzzy history, Ctrl-T fuzzy file path into the command line,
 # Alt-C fuzzy cd. Without this line fzf is only a binary.
 source <(fzf --zsh)
+# Alt-C lists every folder below, hidden ones included, minus build output.
+# fd's .gitignore filter is off on purpose: it also hid .idea and .claude/worktrees.
+export FZF_ALT_C_COMMAND='fd --type d --hidden --no-ignore --exclude .git --exclude target --exclude node_modules --exclude __pycache__'
 # fzf-tab: while picking a directory after `cd`, show its contents on the right —
 # the same instinct as the chpwd hook below, one step earlier.
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=always $realpath'
