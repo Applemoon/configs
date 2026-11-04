@@ -1,3 +1,34 @@
+-- The base the branch's MR goes into, by the `mr` skill's rule: the version suffix of the branch name
+-- (`<ID>-1-31-11` -> origin/1.31.11-patch, `<ID>-1.4.23` -> origin/1.4.23-patch) when that branch exists, else the
+-- line it is nearest to by commits among origin/HEAD, the patch branches and the customer lines dev-*.
+-- No ancestor filter: a patch line that moved on after the branch was cut is still its base.
+local function mr_base()
+  local function git(args)
+    local out = vim.fn.systemlist(vim.list_extend({ "git" }, args))
+    return vim.v.shell_error == 0 and out or nil
+  end
+  local branch = (git({ "rev-parse", "--abbrev-ref", "HEAD" }) or {})[1] or ""
+  local a, b, c = branch:match("%-(%d+)[%.%-](%d+)[%.%-](%d+)$")
+  if a then
+    local ref = ("origin/%s.%s.%s-patch"):format(a, b, c)
+    if git({ "rev-parse", "-q", "--verify", "refs/remotes/" .. ref }) then
+      return ref
+    end
+  end
+  local best, best_n = "origin/HEAD", math.huge
+  local refs = git({ "for-each-ref", "--format=%(refname:short)", "refs/remotes/origin" }) or {}
+  table.insert(refs, 1, "origin/HEAD")
+  for _, ref in ipairs(refs) do
+    if ref == "origin/HEAD" or ref:match("%-patch$") or ref:match("/dev%-[^/]+$") then
+      local n = tonumber((git({ "rev-list", "--count", ref .. "..HEAD" }) or {})[1])
+      if n and n < best_n then
+        best, best_n = ref, n
+      end
+    end
+  end
+  return best
+end
+
 return {
   {
     "sindrets/diffview.nvim",
@@ -5,6 +36,16 @@ return {
     keys = {
       -- worktree vs HEAD in one diff (IDEA-style), not worktree vs index
       { "<leader>gv", "<cmd>DiffviewOpen HEAD<cr>", desc = "Diffview vs HEAD" },
+      -- the branch since it left its MR base: what its MR shows (committed changes only)
+      {
+        "<leader>gV",
+        function()
+          local base = mr_base()
+          vim.notify("Diffview: " .. base .. "...HEAD")
+          vim.cmd("DiffviewOpen " .. base .. "...HEAD")
+        end,
+        desc = "Diffview branch vs its MR base",
+      },
     },
     opts = {
       hooks = {
