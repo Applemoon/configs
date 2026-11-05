@@ -135,7 +135,7 @@ PY
 
 for m in "${MODELS[@]}"; do
   if "$CODEX" exec --skip-git-repo-check -s read-only -m "$m" -c web_search='"live"' \
-       -o answer.txt "$*"$'\n\n'"$FORMAT" >log.txt 2>&1 && [ -s answer.txt ]; then
+       -o answer.txt "$*"$'\n\n'"$FORMAT" </dev/null >log.txt 2>&1 && [ -s answer.txt ]; then
     cat answer.txt
     check_sources answer.txt || echo "ask-codex: source check failed" >&2
     exit 0
