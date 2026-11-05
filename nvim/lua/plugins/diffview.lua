@@ -29,6 +29,60 @@ local function mr_base()
   return best
 end
 
+-- <CR>/<BS> in the diff windows: the next/previous change, and past the last (first) change of a file the first
+-- change of the next file (the last change of the previous one), like F7/Shift+F7 in IDEA.
+local function is_change(lnum)
+  return vim.fn.diff_hlID(lnum, 1) ~= 0 or vim.fn.diff_filler(lnum) > 0
+end
+
+local function first_change()
+  vim.cmd("normal! gg")
+  if not is_change(1) then
+    pcall(vim.cmd, "normal! ]c")
+  end
+end
+
+local function last_change()
+  first_change()
+  while true do
+    local before = vim.fn.line(".")
+    pcall(vim.cmd, "normal! ]c")
+    if vim.fn.line(".") == before then
+      return
+    end
+  end
+end
+
+local function jump_change(dir)
+  return function()
+    local before = vim.fn.line(".")
+    pcall(vim.cmd, "normal! " .. (dir > 0 and "]c" or "[c"))
+    if vim.fn.line(".") ~= before then
+      return
+    end
+    local view = require("diffview.lib").get_current_view()
+    -- DiffView has next_file/prev_file, FileHistoryView next_item/prev_item
+    local switch = view and (dir > 0 and (view.next_file or view.next_item) or (view.prev_file or view.prev_item))
+    if not switch then
+      return
+    end
+    local win = vim.api.nvim_get_current_win()
+    local land
+    land = function()
+      view.emitter:off(land, "file_open_post")
+      vim.schedule(function()
+        if vim.api.nvim_win_is_valid(win) then
+          vim.api.nvim_win_call(win, dir > 0 and first_change or last_change)
+        end
+      end)
+    end
+    view.emitter:once("file_open_post", land)
+    if not switch(view) then
+      view.emitter:off(land, "file_open_post")
+    end
+  end
+end
+
 return {
   {
     "sindrets/diffview.nvim",
@@ -48,6 +102,12 @@ return {
       },
     },
     opts = {
+      keymaps = {
+        view = {
+          { "n", "<cr>", jump_change(1), { desc = "Next change, past the last one the next file" } },
+          { "n", "<bs>", jump_change(-1), { desc = "Previous change, past the first one the previous file" } },
+        },
+      },
       hooks = {
         diff_buf_win_enter = function(_, winid)
           vim.wo[winid].wrap = true
