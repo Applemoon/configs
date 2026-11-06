@@ -138,6 +138,8 @@ return {
       hooks = {
         diff_buf_win_enter = function(_, winid)
           vim.wo[winid].wrap = true
+          -- the whole file unfolded, as after zR; zM still folds the unchanged lines
+          vim.wo[winid].foldlevel = 99
         end,
       },
     },
