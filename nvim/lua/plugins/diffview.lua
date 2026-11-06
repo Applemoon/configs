@@ -110,7 +110,25 @@ return {
         desc = "Diffview branch vs its MR base",
       },
     },
+    -- a panel dragged wider by the mouse squeezes only the diff next to it: level the two diffs again
+    -- (the panel keeps its width, diffview marks it winfixwidth)
+    init = function()
+      vim.api.nvim_create_autocmd("WinResized", {
+        group = vim.api.nvim_create_augroup("diffview_level_diffs", { clear = true }),
+        callback = function()
+          for _, win in ipairs(vim.v.event.windows) do
+            if vim.api.nvim_win_is_valid(win) and vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "DiffviewFiles" then
+              vim.cmd("wincmd =")
+              return
+            end
+          end
+        end,
+      })
+    end,
     opts = {
+      file_panel = {
+        win_config = { width = 50 },
+      },
       keymaps = {
         view = {
           { "n", "<cr>", jump_change(1), { desc = "Next change, past the last one the next file" } },
