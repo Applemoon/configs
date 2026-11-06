@@ -53,11 +53,13 @@ local function last_change()
   end
 end
 
+-- the change lands mid-screen, not at its top or bottom edge
 local function jump_change(dir)
   return function()
     local before = vim.fn.line(".")
     pcall(vim.cmd, "normal! " .. (dir > 0 and "]c" or "[c"))
     if vim.fn.line(".") ~= before then
+      vim.cmd("normal! zz")
       return
     end
     local view = require("diffview.lib").get_current_view()
@@ -72,7 +74,14 @@ local function jump_change(dir)
       view.emitter:off(land, "file_open_post")
       vim.schedule(function()
         if vim.api.nvim_win_is_valid(win) then
-          vim.api.nvim_win_call(win, dir > 0 and first_change or last_change)
+          vim.api.nvim_win_call(win, function()
+            if dir > 0 then
+              first_change()
+            else
+              last_change()
+            end
+            vim.cmd("normal! zz")
+          end)
         end
       end)
     end
