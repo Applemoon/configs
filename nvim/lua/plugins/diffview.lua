@@ -109,6 +109,8 @@ return {
         end,
         desc = "Diffview branch vs its MR base",
       },
+      -- the commit log (IDEA's Git Log): pick a commit, then its files and their diffs
+      { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", desc = "Diffview commit history" },
     },
     -- a panel dragged wider by the mouse squeezes only the diff next to it: level the two diffs again
     -- (the panel keeps its width, diffview marks it winfixwidth)
