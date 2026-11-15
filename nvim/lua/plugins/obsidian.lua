@@ -11,10 +11,12 @@ return {
     cmd = "Obsidian",
     opts = {
       legacy_commands = false,
-      workspaces = {
+      workspaces = vim.tbl_filter(function(w)
+        return vim.uv.fs_stat(vim.fn.expand(w.path)) ~= nil
+      end, {
         { name = "personal", path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/My vault" },
         { name = "work", path = "~/Developer/work-vault" },
-      },
+      }),
       picker = { name = "fzf-lua" },
       frontmatter = { enabled = false },
       note_id_func = function(title)
