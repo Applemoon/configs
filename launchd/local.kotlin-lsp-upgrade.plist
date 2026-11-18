@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  kotlin-lsp builds are EAP and expire (about 40 days after the build date); an expired one exits at
+  start and the editor's Kotlin navigation silently stops. Hourly, this job upgrades the cask - unless a
+  kotlin-lsp server is running, since the upgrade deletes the old version's directory under it. An
+  expired build stops its servers, so the upgrade still lands within the hour. Only an upgrade or an
+  error is logged, to ~/Library/Logs/kotlin-lsp-upgrade.log. The quarantine is cleared by
+  local.kotlin-lsp-unquarantine.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.kotlin-lsp-upgrade</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-c</string>
+    <string>[[ -d /opt/homebrew/Caskroom/kotlin-lsp ]] || exit 0; pgrep -qf 'Caskroom/kotlin-lsp/.*/bin/intellij-[s]erver' &amp;&amp; exit 0; out=$(/opt/homebrew/bin/brew upgrade --cask kotlin-lsp 2>&amp;1); [[ $out == *(Upgrading|Error)* ]] &amp;&amp; print -r -- "$(date '+%F %T') $out" >> ~/Library/Logs/kotlin-lsp-upgrade.log; exit 0</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>3600</integer>
+  <key>RunAtLoad</key>
+  <true/>
+</dict>
+</plist>
