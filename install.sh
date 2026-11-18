@@ -114,6 +114,23 @@ link "bin/ascii-cols"  "$HOME/.local/bin/ascii-cols"
 link "bin/ask-codex"   "$HOME/.local/bin/ask-codex"
 link "services/Open Claude Code in Ghostty.workflow" "$HOME/Library/Services/Open Claude Code in Ghostty.workflow"
 
+# ─── LaunchAgents ─────────────────────────────────────────────────────────────
+# Copied, not linked: launchd reads the plist when the job is loaded, so a changed
+# repo copy has to be reloaded anyway, and this step does both only when it differs.
+for src in "$REPO_DIR"/launchd/*.plist; do
+  label="$(basename "$src" .plist)"
+  dst="$HOME/Library/LaunchAgents/$label.plist"
+  if cmp -s "$src" "$dst"; then
+    warn "LaunchAgent $label up to date — skipping"
+  else
+    mkdir -p "$HOME/Library/LaunchAgents"
+    cp "$src" "$dst"
+    launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+    launchctl bootstrap "gui/$(id -u)" "$dst"
+    info "Loaded LaunchAgent: $label"
+  fi
+done
+
 # ─── ccstatusline (Claude Code status line, npm-only) ─────────────────────────
 # Newest release at least 14 days old: it reads the Claude token from the keychain,
 # so a hijacked release has time to be pulled before it lands here.

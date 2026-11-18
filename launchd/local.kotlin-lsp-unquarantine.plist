@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Homebrew quarantines every cask it installs, and kotlin-lsp ships three files JetBrains signed but did
+  not notarize (bin/intellij-server, bin/lsp-router, libfilewatcher_jni.dylib), so Gatekeeper asks to
+  approve each of them after every upgrade. A new version directory appearing under the cask fires this
+  job; it waits until brew has exited, then clears the quarantine flag on the whole cask.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.kotlin-lsp-unquarantine</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-c</string>
+    <string>d=/opt/homebrew/Caskroom/kotlin-lsp; [[ -d $d ]] || exit 0; for i in {1..120}; do pgrep -qf 'Homebrew/[b]rew\.rb' || break; sleep 5; done; xattr -dr com.apple.quarantine $d 2>/dev/null; exit 0</string>
+  </array>
+  <key>WatchPaths</key>
+  <array>
+    <string>/opt/homebrew/Caskroom/kotlin-lsp</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+</dict>
+</plist>
