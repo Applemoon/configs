@@ -35,7 +35,26 @@ local function is_change(lnum)
   return vim.fn.diff_hlID(lnum, 1) ~= 0 or vim.fn.diff_filler(lnum) > 0
 end
 
+-- The unified layout (diff1_inline) keeps 'diff' off, so ]c and diff_hlID see nothing there: its changes are the
+-- renderer's hunk rows (0-based). nil in any other layout.
+local function inline_rows()
+  local view = require("diffview.lib").get_current_view()
+  if view and view.cur_layout and view.cur_layout.name == "diff1_inline" then
+    return require("diffview.scene.inline_diff").hunk_anchor_rows(vim.api.nvim_get_current_buf())
+  end
+end
+
+local function goto_row(row)
+  if row then
+    pcall(vim.api.nvim_win_set_cursor, 0, { row + 1, 0 })
+  end
+end
+
 local function first_change()
+  local rows = inline_rows()
+  if rows then
+    return goto_row(rows[1])
+  end
   vim.cmd("normal! gg")
   if not is_change(1) then
     pcall(vim.cmd, "normal! ]c")
@@ -43,6 +62,10 @@ local function first_change()
 end
 
 local function last_change()
+  local rows = inline_rows()
+  if rows then
+    return goto_row(rows[#rows])
+  end
   first_change()
   while true do
     local before = vim.fn.line(".")
@@ -53,12 +76,31 @@ local function last_change()
   end
 end
 
+-- one change forward or back inside the file; false when there is none left on that side
+local function step_change(dir)
+  local before = vim.fn.line(".")
+  local rows = inline_rows()
+  if rows then
+    local target
+    for _, row in ipairs(rows) do
+      if dir > 0 and row + 1 > before then
+        target = row
+        break
+      elseif dir < 0 and row + 1 < before then
+        target = row
+      end
+    end
+    goto_row(target)
+  else
+    pcall(vim.cmd, "normal! " .. (dir > 0 and "]c" or "[c"))
+  end
+  return vim.fn.line(".") ~= before
+end
+
 -- the change lands mid-screen, not at its top or bottom edge
 local function jump_change(dir)
   return function()
-    local before = vim.fn.line(".")
-    pcall(vim.cmd, "normal! " .. (dir > 0 and "]c" or "[c"))
-    if vim.fn.line(".") ~= before then
+    if step_change(dir) then
       vim.cmd("normal! zz")
       return
     end
@@ -94,7 +136,8 @@ end
 
 return {
   {
-    "sindrets/diffview.nvim",
+    -- the maintained fork: sindrets/diffview.nvim stopped in 2024 and has no unified layout
+    "dlyongemallo/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewToggleFiles" },
     keys = {
       -- worktree vs HEAD in one diff (IDEA-style), not worktree vs index
@@ -128,6 +171,12 @@ return {
       })
     end,
     opts = {
+      -- g<C-x> cycles side by side -> unified (one window, old lines above the new) -> stacked
+      view = {
+        cycle_layouts = {
+          default = { "diff2_horizontal", "diff1_inline", "diff2_vertical" },
+        },
+      },
       file_panel = {
         win_config = { width = 50 },
       },
