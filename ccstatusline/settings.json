@@ -30,13 +30,6 @@
         }
       },
       {
-        "id": "c1a2b3d4-0004-4000-8000-000000000004",
-        "type": "custom-command",
-        "backgroundColor": "bgBrightBlack",
-        "commandPath": "d=$(jq -r \".workspace.current_dir // .cwd\"); n=$(git --no-optional-locks -C \"$d\" status --porcelain 2>/dev/null | wc -l | tr -d \" \"); [ \"$n\" -gt 0 ] && echo \"📸 $n\" || true",
-        "timeout": 2000
-      },
-      {
         "id": "c1a2b3d4-0003-4000-8000-000000000003",
         "type": "git-ahead-behind",
         "color": "cyan",
@@ -49,21 +42,27 @@
       {
         "id": "1",
         "type": "model",
-        "color": "cyan"
-      },
-      {
-        "id": "48d0e992-23ac-4caf-a6a2-076ead81093e",
-        "type": "output-style",
-        "backgroundColor": "bgMagenta",
+        "color": "cyan",
         "merge": true,
         "metadata": {
-          "hide": "default-value"
+          "label": ""
         }
       },
       {
         "id": "32956e89-4d74-44da-86ea-1170dec0665d",
         "type": "thinking-effort",
-        "backgroundColor": "bgRed"
+        "backgroundColor": "bgRed",
+        "metadata": {
+          "label": ""
+        }
+      },
+      {
+        "id": "48d0e992-23ac-4caf-a6a2-076ead81093e",
+        "type": "output-style",
+        "backgroundColor": "bgMagenta",
+        "metadata": {
+          "hide": "default-value"
+        }
       },
       {
         "id": "e3301aef-1a5c-486d-96ce-263ed28fd6f4",
@@ -100,9 +99,17 @@
         "backgroundColor": "bgBrightCyan",
         "merge": true,
         "metadata": {
-          "display": "slider",
-          "invert": "true"
+          "display": "slider-only",
+          "invert": "true",
+          "label": "Session: "
         }
+      },
+      {
+        "id": "4f7bd3a8-bd9e-4dfd-8827-44775eebdf8c",
+        "type": "custom-text",
+        "backgroundColor": "bgBrightWhite",
+        "customText": "⌛: ",
+        "merge": "no-padding"
       },
       {
         "id": "8690885d-1945-42e4-9cc5-53b68ae5a21b",
@@ -110,7 +117,7 @@
         "backgroundColor": "bgBrightGreen",
         "rawValue": true,
         "metadata": {
-          "display": "slider",
+          "display": "slider-only",
           "invert": "true"
         }
       },
@@ -120,9 +127,17 @@
         "backgroundColor": "bgWhite",
         "merge": true,
         "metadata": {
-          "display": "slider",
-          "invert": "true"
+          "display": "slider-only",
+          "invert": "true",
+          "label": "Week: "
         }
+      },
+      {
+        "id": "12ce3497-2d00-4342-90d1-1b58ceeaa073",
+        "type": "custom-text",
+        "backgroundColor": "bgYellow",
+        "customText": "⌛: ",
+        "merge": "no-padding"
       },
       {
         "id": "79dd3b60-78ed-4c8b-98b0-a90480c3417a",
@@ -130,8 +145,7 @@
         "backgroundColor": "bgBrightMagenta",
         "rawValue": true,
         "metadata": {
-          "display": "slider",
-          "invert": "true"
+          "display": "slider-only"
         }
       }
     ]
@@ -144,6 +158,8 @@
   "inheritSeparatorColors": false,
   "globalBold": false,
   "gitCacheTtlSeconds": 5,
+  "terminalWidthCacheTtlSeconds": 5,
+  "customCommandCacheTtlSeconds": 0,
   "minimalistMode": false,
   "powerline": {
     "enabled": true,
